@@ -1,6 +1,5 @@
-const boardSize = 11;
+const boardSize = 15;
 let board = [];
-// let copy_board = []; // 現状未使用
 //変更予定
 const blackPlayer = "たろう"; // 先手
 const whitePlayer = "はなこ"; // 後手
@@ -61,19 +60,6 @@ function onCellClick(event) {
   if (board[row][col] === "") {
     board[row][col] = players[currentPlayerIndex];
     event.target.textContent = players[currentPlayerIndex];
-    //勝利判定&ターンを変更 ここcheckWin関数使用しないよう訂正する
-    //if (checkWin(row, col)) {
-    //  //text後で変更
-    //  messageElement.textContent = `Player ${currentPlayer} wins!`;
-    //  boardElement.removeEventListener("click", onCellClick);
-    //  //勝敗決定時クリックできないようにする(未デバッグ)
-    //  const cells = document.querySelectorAll(".cell");
-    //  cells.forEach((cell) => cell.removeEventListener("click", onCellClick));
-    //} else {
-    //  currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-    //  //text後で変更
-    //  messageElement.textContent = `Player ${currentPlayer}'s turn`;
-    //}
 
     // 観測する・しないの選択待ちに入る。
     disableClicks();
@@ -85,59 +71,6 @@ function onCellClick(event) {
     // 次に置く駒を変更（観測の有無に関係しない）
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   }
-}
-
-//勝利判定の関数を作る(やってることあんまり理解できなかったから使わないがcheckWinを定義しないとエラーが出るので一応残してある)
-function checkWin(row, col) {
-  const directions = [
-    { x: 1, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-    { x: 1, y: -1 },
-  ];
-
-  for (const { x, y } of directions) {
-    let count = 1;
-
-    for (let i = 1; i < 5; i++) {
-      const newRow = +row + i * y;
-      const newCol = +col + i * x;
-      if (
-        newRow >= 0 &&
-        newRow < boardSize &&
-        newCol >= 0 &&
-        newCol < boardSize &&
-        //変更予定
-        board[newRow][newCol] === currentPlayer
-      ) {
-        count++;
-      } else {
-        break;
-      }
-    }
-
-    for (let i = 1; i < 5; i++) {
-      const newRow = +row - i * y;
-      const newCol = +col - i * x;
-      if (
-        newRow >= 0 &&
-        newRow < boardSize &&
-        newCol >= 0 &&
-        newCol < boardSize &&
-        //変更予定
-        board[newRow][newCol] === currentPlayer
-      ) {
-        count++;
-      } else {
-        break;
-      }
-    }
-
-    if (count >= 5) {
-      return true;
-    }
-  }
-  return false;
 }
 
 //Xからゲームをリスタートする関数
@@ -152,27 +85,6 @@ console.log("読み込み開始");
 //観測する関数
 var hFCC_b, hFCC_w; // switchBoard関数で参照したいからグローバル変数。
 function observation() {
-  //ここできなかったとこ(表示用)
-  //copy_board = Array(boardSize)
-  //  .fill(null)
-  //  .map(() => Array(boardSize).fill(""));
-
-  //copy_boardElement.innerHTML = "";
-  //let cell1 = document.getElementById('specificCell');
-
-  //for (let row = 0; row < boardSize; row++) {
-  //  for (let col = 0; col < boardSize; col++) {
-  //    const cell1 = document.createElement("div");
-  //    cell1.classList.add("cell1");
-  //    cell1.dataset.row = row;
-  //    cell1.dataset.col = col;
-  //    // 初期値に応じてマークを設定
-  //    cell1.textContent = board[row][col] >= 70 ? "〇" : "×";
-  //    copy_boardElement.appendChild(cell1);
-  //  }
-  //}
-  //ここまで
-
   //判定後はこの配列の中に入れる
   const board_result = []; // 初期化
 
