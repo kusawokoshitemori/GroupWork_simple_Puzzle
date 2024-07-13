@@ -81,6 +81,7 @@ function resetGame() {
   currentPlayerIndex = 0;
   currentPlayer = blackPlayer;
   waitingPlayer = whitePlayer;
+  document.getElementById("switchBoard").textContent = "確率の盤面へ";
   createBoard();
 }
 
