@@ -118,13 +118,15 @@ function resetGame() {
 
 //観測する関数
 console.log("読み込み開始");
-//観測する関数
+
+//観測する関数;
 function observation() {
   copy_board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(0));
 
   copy_boardElement.innerHTML = "";
+  //let cell1 = document.getElementById('specificCell');
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       const cell1 = document.createElement("div");
@@ -132,7 +134,7 @@ function observation() {
       cell1.dataset.row = row;
       cell1.dataset.col = col;
       // 初期値に応じてマークを設定
-      cell.textContent = board[row][col] >= 70 ? "〇" : "×";
+      cell1.textContent = board[row][col] >= 70 ? "〇" : "×";
       copy_boardElement.appendChild(cell1);
     }
   }
