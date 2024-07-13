@@ -57,8 +57,8 @@ function onCellClick(event) {
   }
 }
 
-//勝利判定の関数を作る
-function checkWin(row, col) {
+//勝利判定の関数を作る(やってることあんまり理解できなかったから使ってない)
+/*function checkWin(row, col) {
   const directions = [
     { x: 1, y: 0 },
     { x: 0, y: 1 },
@@ -108,7 +108,7 @@ function checkWin(row, col) {
     }
   }
   return false;
-}
+}*/
 
 //Xからゲームをリスタートする関数
 function resetGame() {
@@ -119,14 +119,17 @@ function resetGame() {
 //観測する関数
 console.log("読み込み開始");
 
+//
 //観測する関数;
 function observation() {
+  //ここできなかったとこ(表示用)
   copy_board = Array(boardSize)
     .fill(null)
-    .map(() => Array(boardSize).fill(0));
+    .map(() => Array(boardSize).fill(""));
 
-  copy_boardElement.innerHTML = "";
+  //copy_boardElement.innerHTML = "";
   //let cell1 = document.getElementById('specificCell');
+
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       const cell1 = document.createElement("div");
@@ -138,7 +141,23 @@ function observation() {
       copy_boardElement.appendChild(cell1);
     }
   }
-  console.log("読み込み成功");
+  //ここまで
+
+  //黒、白の判定 + 配列に保存
+
+  for (let row = 0; row < boardSize; row++) {
+    for (let col = 0; col < boardSize; col++) {
+      //１までの乱数
+      const randomDecimal = Math.random();
+      if (board[row][col] === "") {
+        console.log("何も入ってない");
+      } else if (board[row][col] / 100 >= randomDecimal) {
+        console.log("黒です");
+      } else {
+        console.log("白です");
+      }
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
