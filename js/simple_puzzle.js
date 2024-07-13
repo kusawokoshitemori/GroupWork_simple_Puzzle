@@ -1,8 +1,10 @@
 const boardSize = 15;
 let board = [];
+let copy_board = [];
 //変更予定
 let currentPlayer = "X";
 const boardElement = document.getElementById("board");
+const copy_boardElement = document.getElementById("copy_board");
 const messageElement = document.getElementById("message");
 
 //ボード作成
@@ -26,7 +28,7 @@ function createBoard() {
 }
 
 //置く駒の配列&初期化
-const players = ["90", "10", "70", "30"];
+const players = [90, 10, 70, 30];
 let currentPlayerIndex = 0;
 
 //クリックしたときの処理
@@ -44,7 +46,7 @@ function onCellClick(event) {
       //text後で変更
       messageElement.textContent = `Player ${currentPlayer} wins!`;
       boardElement.removeEventListener("click", onCellClick);
-      //勝敗決定時クリックできないようにする
+      //勝敗決定時クリックできないようにする(未デバッグ)
       const cells = document.querySelectorAll(".cell");
       cells.forEach((cell) => cell.removeEventListener("click", onCellClick));
     } else {
@@ -110,9 +112,31 @@ function checkWin(row, col) {
 
 //Xからゲームをリスタートする関数
 function resetGame() {
-  //変更予定
-  currentPlayer = "X";
+  currentPlayerIndex = 0;
   createBoard();
+}
+
+//観測する関数
+console.log("読み込み開始");
+//観測する関数
+function observation() {
+  copy_board = Array(boardSize)
+    .fill(null)
+    .map(() => Array(boardSize).fill(0));
+
+  copy_boardElement.innerHTML = "";
+  for (let row = 0; row < boardSize; row++) {
+    for (let col = 0; col < boardSize; col++) {
+      const cell1 = document.createElement("div");
+      cell1.classList.add("cell1");
+      cell1.dataset.row = row;
+      cell1.dataset.col = col;
+      // 初期値に応じてマークを設定
+      cell.textContent = board[row][col] >= 70 ? "〇" : "×";
+      copy_boardElement.appendChild(cell1);
+    }
+  }
+  console.log("読み込み成功");
 }
 
 document.addEventListener("DOMContentLoaded", () => {
