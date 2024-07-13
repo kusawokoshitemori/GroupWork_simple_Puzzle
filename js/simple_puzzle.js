@@ -37,7 +37,6 @@ function createBoard() {
       cell.classList.add("cell");
       cell.dataset.row = row;
       cell.dataset.col = col;
-      // cell.addEventListener("click", onCellClick);
       boardElement.appendChild(cell);
     }
   }
@@ -73,9 +72,11 @@ function onCellClick(event) {
   }
 }
 
-//Xからゲームをリスタートする関数
+// 先手(blackPlayer)からゲームをリスタートする関数
 function resetGame() {
   currentPlayerIndex = 0;
+  currentPlayer = blackPlayer;
+  waitingPlayer = whitePlayer;
   createBoard();
 }
 
