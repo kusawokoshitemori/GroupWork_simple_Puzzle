@@ -41,7 +41,7 @@ function onCellClick(event) {
   if (board[row][col] === "") {
     board[row][col] = players[currentPlayerIndex];
     event.target.textContent = players[currentPlayerIndex];
-    //勝利判定&ターンを変更
+    //勝利判定&ターンを変更 ここcheckWin関数使用しないよう訂正する
     if (checkWin(row, col)) {
       //text後で変更
       messageElement.textContent = `Player ${currentPlayer} wins!`;
@@ -57,8 +57,8 @@ function onCellClick(event) {
   }
 }
 
-//勝利判定の関数を作る(やってることあんまり理解できなかったから使ってない)
-/*function checkWin(row, col) {
+//勝利判定の関数を作る(やってることあんまり理解できなかったから使わないがcheckWinを定義しないとエラーが出るので一応残してある)
+function checkWin(row, col) {
   const directions = [
     { x: 1, y: 0 },
     { x: 0, y: 1 },
@@ -108,7 +108,7 @@ function onCellClick(event) {
     }
   }
   return false;
-}*/
+}
 
 //Xからゲームをリスタートする関数
 function resetGame() {
@@ -144,20 +144,27 @@ function observation() {
   //ここまで
 
   //黒、白の判定 + 配列に保存
-
+  const board_result = [];
   for (let row = 0; row < boardSize; row++) {
+    const board_result_row = [];
     for (let col = 0; col < boardSize; col++) {
       //１までの乱数
       const randomDecimal = Math.random();
       if (board[row][col] === "") {
         console.log("何も入ってない");
+        board_result_row.push("入ってない");
       } else if (board[row][col] / 100 >= randomDecimal) {
         console.log("黒です");
+        board_result_row.push("黒");
       } else {
         console.log("白です");
+        board_result_row.push("白");
       }
     }
+    board_result.push(board_result_row);
   }
+
+  console.log(board_result);
 }
 
 document.addEventListener("DOMContentLoaded", () => {
