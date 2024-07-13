@@ -130,8 +130,6 @@ function resetGame() {
 //観測する関数
 console.log("読み込み開始");
 
-//判定後はこの配列の中に入れる
-const board_result = [];
 //観測する関数;
 function observation() {
   //ここできなかったとこ(表示用)
@@ -154,6 +152,9 @@ function observation() {
   //  }
   //}
   //ここまで
+
+  //判定後はこの配列の中に入れる
+  const board_result = [];
 
   //黒、白の判定 + 配列に保存
   //board_resultが観測後の要素が入っているやつ
@@ -180,6 +181,7 @@ function observation() {
   boardElement.style.display = "none";
   copy_boardElement.style.display = "grid";
 
+  copy_boardElement.innerHTML = "";
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       const cell1 = document.createElement("div");
