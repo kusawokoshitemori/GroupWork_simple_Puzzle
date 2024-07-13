@@ -3,18 +3,26 @@ let board = [];
 let copy_board = [];
 //変更予定
 let currentPlayer = "X";
+
 const boardElement = document.getElementById("board");
+// boardsizeに対応したグリッドレイアウト
+boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 const copy_boardElement = document.getElementById("copy_board");
+// boardsizeに対応したグリッドレイアウト
+copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 const messageElement = document.getElementById("message");
 
 //ボード作成
 function createBoard() {
+  // 盤面の切り替え
+  boardElement.style.display = "grid";
+  copy_boardElement.style.display = "none";
+
   board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(""));
-  // boardsizeに対応したグリッドレイアウト
-  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-  boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
   boardElement.innerHTML = "";
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
@@ -168,8 +176,9 @@ function observation() {
     board_result.push(board_result_row);
   }
 
-  // これから観測結果を表示するため、確率で表された盤面を非表示。
+  // 盤面の切り替え
   boardElement.style.display = "none";
+  copy_boardElement.style.display = "grid";
 
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
@@ -195,9 +204,6 @@ function observation() {
       copy_boardElement.appendChild(cell1);
     }
   }
-  // boardsizeに対応したグリッドレイアウト
-  copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-  copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 
   console.log(board_result);
 
