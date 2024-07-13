@@ -1,10 +1,11 @@
-// script.js
 const boardSize = 15;
 let board = [];
+//変更予定
 let currentPlayer = "X";
 const boardElement = document.getElementById("board");
 const messageElement = document.getElementById("message");
 
+//ボード作成
 function createBoard() {
   board = Array(boardSize)
     .fill(null)
@@ -20,26 +21,41 @@ function createBoard() {
       boardElement.appendChild(cell);
     }
   }
+  //currentPlayerがplayersになってる。textの微変更
   messageElement.textContent = `Player ${currentPlayer}'s turn`;
 }
 
+//置く駒の配列&初期化
+const players = ["90", "10", "70", "30"];
+let currentPlayerIndex = 0;
+
+//クリックしたときの処理
 function onCellClick(event) {
+  //rowとcolが縦と横の変数
   const row = event.target.dataset.row;
   const col = event.target.dataset.col;
 
+  //空なら今のプレイヤーの記号を置く
   if (board[row][col] === "") {
-    board[row][col] = currentPlayer;
-    event.target.textContent = currentPlayer;
+    board[row][col] = players[currentPlayerIndex];
+    event.target.textContent = players[currentPlayerIndex];
+    //勝利判定&ターンを変更
     if (checkWin(row, col)) {
+      //text後で変更
       messageElement.textContent = `Player ${currentPlayer} wins!`;
       boardElement.removeEventListener("click", onCellClick);
+      //勝敗決定時クリックできないようにする
+      const cells = document.querySelectorAll(".cell");
+      cells.forEach((cell) => cell.removeEventListener("click", onCellClick));
     } else {
-      currentPlayer = currentPlayer === "X" ? "O" : "X";
+      currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+      //text後で変更
       messageElement.textContent = `Player ${currentPlayer}'s turn`;
     }
   }
 }
 
+//勝利判定の関数を作る
 function checkWin(row, col) {
   const directions = [
     { x: 1, y: 0 },
@@ -59,6 +75,7 @@ function checkWin(row, col) {
         newRow < boardSize &&
         newCol >= 0 &&
         newCol < boardSize &&
+        //変更予定
         board[newRow][newCol] === currentPlayer
       ) {
         count++;
@@ -75,6 +92,7 @@ function checkWin(row, col) {
         newRow < boardSize &&
         newCol >= 0 &&
         newCol < boardSize &&
+        //変更予定
         board[newRow][newCol] === currentPlayer
       ) {
         count++;
@@ -90,7 +108,9 @@ function checkWin(row, col) {
   return false;
 }
 
+//Xからゲームをリスタートする関数
 function resetGame() {
+  //変更予定
   currentPlayer = "X";
   createBoard();
 }
