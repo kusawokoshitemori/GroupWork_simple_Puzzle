@@ -119,7 +119,8 @@ function resetGame() {
 //観測する関数
 console.log("読み込み開始");
 
-//
+//判定後はこの関数の中に入れる
+const board_result = [];
 //観測する関数;
 function observation() {
   //ここできなかったとこ(表示用)
@@ -144,7 +145,7 @@ function observation() {
   //ここまで
 
   //黒、白の判定 + 配列に保存
-  const board_result = [];
+  //board_resultが観測後の要素が入っているやつ
   for (let row = 0; row < boardSize; row++) {
     const board_result_row = [];
     for (let col = 0; col < boardSize; col++) {
@@ -165,6 +166,98 @@ function observation() {
   }
 
   console.log(board_result);
+
+  console.log(hasFiveConsecutiveCircles("黒"));
+  console.log(hasFiveConsecutiveCircles("白"));
+}
+
+//board_resultを使って勝利判定する
+
+// "〇"が5個以上連続して並んでいるかどうかを判定する関数
+function hasFiveConsecutiveCircles(targetSymbol) {
+  const consecutiveCountNeeded = 5;
+
+  // 横方向の判定
+  for (let row = 0; row < boardSize; row++) {
+    let consecutiveCount = 0;
+    for (let col = 0; col < boardSize; col++) {
+      if (board_result[row][col] === targetSymbol) {
+        consecutiveCount++;
+        if (consecutiveCount >= consecutiveCountNeeded) {
+          return true; // 5個以上連続している場合はtrueを返す
+        }
+      } else {
+        consecutiveCount = 0; // 連続していない場合はカウントをリセット
+      }
+    }
+  }
+
+  // 縦方向の判定
+  for (let col = 0; col < boardSize; col++) {
+    let consecutiveCount = 0;
+    for (let row = 0; row < boardSize; row++) {
+      if (board_result[row][col] === targetSymbol) {
+        consecutiveCount++;
+        if (consecutiveCount >= consecutiveCountNeeded) {
+          return true; // 5個以上連続している場合はtrueを返す
+        }
+      } else {
+        consecutiveCount = 0; // 連続していない場合はカウントをリセット
+      }
+    }
+  }
+
+  // 斜め方向（左上から右下）
+  for (
+    let startRow = 0;
+    startRow <= boardSize - consecutiveCountNeeded;
+    startRow++
+  ) {
+    for (
+      let startCol = 0;
+      startCol <= boardSize - consecutiveCountNeeded;
+      startCol++
+    ) {
+      let consecutiveCount = 0;
+      for (let i = 0; i < consecutiveCountNeeded; i++) {
+        if (board_result[startRow + i][startCol + i] === targetSymbol) {
+          consecutiveCount++;
+          if (consecutiveCount >= consecutiveCountNeeded) {
+            return true; // 5個以上連続している場合はtrueを返す
+          }
+        } else {
+          consecutiveCount = 0; // 連続していない場合はカウントをリセット
+        }
+      }
+    }
+  }
+
+  // 斜め方向（右上から左下）
+  for (
+    let startRow = 0;
+    startRow <= boardSize - consecutiveCountNeeded;
+    startRow++
+  ) {
+    for (
+      let startCol = consecutiveCountNeeded - 1;
+      startCol < boardSize;
+      startCol++
+    ) {
+      let consecutiveCount = 0;
+      for (let i = 0; i < consecutiveCountNeeded; i++) {
+        if (board_result[startRow + i][startCol - i] === targetSymbol) {
+          consecutiveCount++;
+          if (consecutiveCount >= consecutiveCountNeeded) {
+            return true; // 5個以上連続している場合はtrueを返す
+          }
+        } else {
+          consecutiveCount = 0; // 連続していない場合はカウントをリセット
+        }
+      }
+    }
+  }
+
+  return false; // 5個以上連続している場所が見つからない場合はfalseを返す
 }
 
 document.addEventListener("DOMContentLoaded", () => {
