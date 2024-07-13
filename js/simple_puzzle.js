@@ -12,6 +12,7 @@ function createBoard() {
   board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(""));
+  console.log(board)
   boardElement.innerHTML = "";
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
