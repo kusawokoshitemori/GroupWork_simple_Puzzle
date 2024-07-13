@@ -209,14 +209,14 @@ function observation() {
 
   console.log(board_result);
 
-  console.log(hasFiveConsecutiveCircles("黒"));
-  console.log(hasFiveConsecutiveCircles("白"));
+  console.log(hasFiveConsecutiveCircles(board_result, "黒"));
+  console.log(hasFiveConsecutiveCircles(board_result, "白"));
 }
 
 //board_resultを使って勝利判定する
 
 // 対象のシンボルが5個以上連続して並んでいるかどうかを判定する関数
-function hasFiveConsecutiveCircles(targetSymbol) {
+function hasFiveConsecutiveCircles(board_result, targetSymbol) {
   const consecutiveCountNeeded = 5;
 
   // 横方向の判定
