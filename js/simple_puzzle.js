@@ -1,4 +1,4 @@
-const boardSize = 15;
+const boardSize = 11;
 let board = [];
 let copy_board = [];
 //変更予定
@@ -12,7 +12,9 @@ function createBoard() {
   board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(""));
-  console.log(board)
+  // boardsizeに対応したグリッドレイアウト
+  boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+  boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
   boardElement.innerHTML = "";
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
@@ -120,29 +122,29 @@ function resetGame() {
 //観測する関数
 console.log("読み込み開始");
 
-//判定後はこの関数の中に入れる
+//判定後はこの配列の中に入れる
 const board_result = [];
 //観測する関数;
 function observation() {
   //ここできなかったとこ(表示用)
-  copy_board = Array(boardSize)
-    .fill(null)
-    .map(() => Array(boardSize).fill(""));
+  //copy_board = Array(boardSize)
+  //  .fill(null)
+  //  .map(() => Array(boardSize).fill(""));
 
   //copy_boardElement.innerHTML = "";
   //let cell1 = document.getElementById('specificCell');
 
-  for (let row = 0; row < boardSize; row++) {
-    for (let col = 0; col < boardSize; col++) {
-      const cell1 = document.createElement("div");
-      cell1.classList.add("cell1");
-      cell1.dataset.row = row;
-      cell1.dataset.col = col;
-      // 初期値に応じてマークを設定
-      cell1.textContent = board[row][col] >= 70 ? "〇" : "×";
-      copy_boardElement.appendChild(cell1);
-    }
-  }
+  //for (let row = 0; row < boardSize; row++) {
+  //  for (let col = 0; col < boardSize; col++) {
+  //    const cell1 = document.createElement("div");
+  //    cell1.classList.add("cell1");
+  //    cell1.dataset.row = row;
+  //    cell1.dataset.col = col;
+  //    // 初期値に応じてマークを設定
+  //    cell1.textContent = board[row][col] >= 70 ? "〇" : "×";
+  //    copy_boardElement.appendChild(cell1);
+  //  }
+  //}
   //ここまで
 
   //黒、白の判定 + 配列に保存
@@ -166,6 +168,37 @@ function observation() {
     board_result.push(board_result_row);
   }
 
+  // これから観測結果を表示するため、確率で表された盤面を非表示。
+  boardElement.style.display = "none";
+
+  for (let row = 0; row < boardSize; row++) {
+    for (let col = 0; col < boardSize; col++) {
+      const cell1 = document.createElement("div");
+      cell1.classList.add("cell1");
+      cell1.dataset.row = row;
+      cell1.dataset.col = col;
+      // 観測結果に応じてマークを設定
+      switch (board_result[row][col]){
+        case "黒":
+          cell1.textContent = "●";
+          break;
+        case "白":
+          cell1.textContent = "◯";
+          break;
+        case "入ってない":
+          cell1.textContent = "";
+          break;
+        default:
+          cell1.textContent = "error";
+          console.log("board_result[" + row + "][" + col + "]に不適切な文字列が格納されています。");
+      }
+      copy_boardElement.appendChild(cell1);
+    }
+  }
+  // boardsizeに対応したグリッドレイアウト
+  copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+  copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
+
   console.log(board_result);
 
   console.log(hasFiveConsecutiveCircles("黒"));
@@ -174,7 +207,7 @@ function observation() {
 
 //board_resultを使って勝利判定する
 
-// "〇"が5個以上連続して並んでいるかどうかを判定する関数
+// 対象のシンボルが5個以上連続して並んでいるかどうかを判定する関数
 function hasFiveConsecutiveCircles(targetSymbol) {
   const consecutiveCountNeeded = 5;
 
