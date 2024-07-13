@@ -27,6 +27,10 @@ function createBoard() {
   document.getElementById("no_observation").disabled = true;
   document.getElementById("switchBoard").disabled = true;
 
+  // 5連判定のブール値初期化
+  hFCC_b = false;
+  hFCC_w = false;
+
   board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(""));
@@ -84,7 +88,7 @@ function resetGame() {
 console.log("読み込み開始");
 
 //観測する関数
-var hFCC_b, hFCC_w; // switchBoard関数で参照したいからグローバル変数。
+var hFCC_b, hFCC_w; // 5連判定のブール値は、switchBoardで参照したいからグローバル変数。
 function observation() {
   //判定後はこの配列の中に入れる
   const board_result = []; // 初期化
