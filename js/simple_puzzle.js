@@ -129,9 +129,11 @@ function observation() {
       switch (board_result[row][col]){
         case "黒":
           cell1.textContent = "●";
+          cell1.style.fontSize = "64px"; // 丸だけ個別にサイズ設定
           break;
         case "白":
-          cell1.textContent = "◯";
+          cell1.textContent = "○";
+          cell1.style.fontSize = "64px"; // 丸だけ個別にサイズ設定
           break;
         case "入ってない":
           cell1.textContent = "";
