@@ -300,7 +300,7 @@ function switchBoard(){
     // ボタンの無効化設定
     if (!hFCC_b && !hFCC_w) {
       // 観測するも5連続が無く、確率の盤面へ戻る場合。
-      [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer]
+      [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
       messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
       document.getElementById("observation").disabled = true;
       document.getElementById("no_observation").disabled = true;
