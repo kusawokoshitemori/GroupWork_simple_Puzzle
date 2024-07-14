@@ -1,30 +1,52 @@
 const boardSize = 15;
 let board = [];
-let copy_board = [];
 //変更予定
-let currentPlayer = "X";
+const blackPlayer = "たろう"; // 先手
+const whitePlayer = "はなこ"; // 後手
+let currentPlayer = blackPlayer;
+let waitingPlayer = whitePlayer;
+
 const boardElement = document.getElementById("board");
+// boardsizeに対応したグリッドレイアウト
+boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 const copy_boardElement = document.getElementById("copy_board");
+// boardsizeに対応したグリッドレイアウト
+copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
+copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 const messageElement = document.getElementById("message");
 
 //ボード作成
 function createBoard() {
+  // 盤面の初期化
+  boardElement.style.display = "grid";
+  copy_boardElement.style.display = "none";
+
+  // ボタンの無効化設定
+  document.getElementById("observation").disabled = true;
+  document.getElementById("no_observation").disabled = true;
+  document.getElementById("switchBoard").disabled = true;
+
+  // 5連判定のブール値初期化
+  hFCC_b = false;
+  hFCC_w = false;
+
   board = Array(boardSize)
     .fill(null)
     .map(() => Array(boardSize).fill(""));
-  boardElement.innerHTML = "";
+  boardElement.innerHTML = ""; // 初期化
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
       const cell = document.createElement("div");
       cell.classList.add("cell");
       cell.dataset.row = row;
       cell.dataset.col = col;
-      cell.addEventListener("click", onCellClick);
       boardElement.appendChild(cell);
     }
   }
+  enableClicks();
   //currentPlayerがplayersになってる。textの微変更
-  messageElement.textContent = `Player ${currentPlayer}'s turn`;
+  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
 }
 
 //置く駒の配列&初期化
@@ -41,108 +63,36 @@ function onCellClick(event) {
   if (board[row][col] === "") {
     board[row][col] = players[currentPlayerIndex];
     event.target.textContent = players[currentPlayerIndex];
-    //勝利判定&ターンを変更 ここcheckWin関数使用しないよう訂正する
-    if (checkWin(row, col)) {
-      //text後で変更
-      messageElement.textContent = `Player ${currentPlayer} wins!`;
-      boardElement.removeEventListener("click", onCellClick);
-      //勝敗決定時クリックできないようにする(未デバッグ)
-      const cells = document.querySelectorAll(".cell");
-      cells.forEach((cell) => cell.removeEventListener("click", onCellClick));
-    } else {
-      currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
-      //text後で変更
-      messageElement.textContent = `Player ${currentPlayer}'s turn`;
-    }
+
+    // 観測する・しないの選択待ちに入る。
+    disableClicks();
+    // ボタンの無効化設定
+    // 「観測する」「観測しない」のボタンが有効。
+    document.getElementById("observation").disabled = false;
+    document.getElementById("no_observation").disabled = false;
+    document.getElementById("switchBoard").disabled = true;
+    // 次に置く駒を変更（観測の有無に関係しない）
+    currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   }
 }
 
-//勝利判定の関数を作る(やってることあんまり理解できなかったから使わないがcheckWinを定義しないとエラーが出るので一応残してある)
-function checkWin(row, col) {
-  const directions = [
-    { x: 1, y: 0 },
-    { x: 0, y: 1 },
-    { x: 1, y: 1 },
-    { x: 1, y: -1 },
-  ];
-
-  for (const { x, y } of directions) {
-    let count = 1;
-
-    for (let i = 1; i < 5; i++) {
-      const newRow = +row + i * y;
-      const newCol = +col + i * x;
-      if (
-        newRow >= 0 &&
-        newRow < boardSize &&
-        newCol >= 0 &&
-        newCol < boardSize &&
-        //変更予定
-        board[newRow][newCol] === currentPlayer
-      ) {
-        count++;
-      } else {
-        break;
-      }
-    }
-
-    for (let i = 1; i < 5; i++) {
-      const newRow = +row - i * y;
-      const newCol = +col - i * x;
-      if (
-        newRow >= 0 &&
-        newRow < boardSize &&
-        newCol >= 0 &&
-        newCol < boardSize &&
-        //変更予定
-        board[newRow][newCol] === currentPlayer
-      ) {
-        count++;
-      } else {
-        break;
-      }
-    }
-
-    if (count >= 5) {
-      return true;
-    }
-  }
-  return false;
-}
-
-//Xからゲームをリスタートする関数
+// 先手(blackPlayer)からゲームをリスタートする関数
 function resetGame() {
   currentPlayerIndex = 0;
+  currentPlayer = blackPlayer;
+  waitingPlayer = whitePlayer;
+  document.getElementById("switchBoard").textContent = "確率の盤面へ";
   createBoard();
 }
 
 //観測する関数
 console.log("読み込み開始");
 
-//判定後はこの関数の中に入れる
-const board_result = [];
-//観測する関数;
+//観測する関数
+var hFCC_b, hFCC_w; // 5連判定のブール値は、switchBoardで参照したいからグローバル変数。
 function observation() {
-  //ここできなかったとこ(表示用)
-  copy_board = Array(boardSize)
-    .fill(null)
-    .map(() => Array(boardSize).fill(""));
-
-  //copy_boardElement.innerHTML = "";
-  //let cell1 = document.getElementById('specificCell');
-
-  for (let row = 0; row < boardSize; row++) {
-    for (let col = 0; col < boardSize; col++) {
-      const cell1 = document.createElement("div");
-      cell1.classList.add("cell1");
-      cell1.dataset.row = row;
-      cell1.dataset.col = col;
-      // 初期値に応じてマークを設定
-      cell1.textContent = board[row][col] >= 70 ? "〇" : "×";
-      copy_boardElement.appendChild(cell1);
-    }
-  }
-  //ここまで
+  //判定後はこの配列の中に入れる
+  const board_result = []; // 初期化
 
   //黒、白の判定 + 配列に保存
   //board_resultが観測後の要素が入っているやつ
@@ -165,16 +115,85 @@ function observation() {
     board_result.push(board_result_row);
   }
 
+  // 観測結果の盤面へ切り替え
+  switchBoard();
+
+  copy_boardElement.innerHTML = ""; // 初期化
+  for (let row = 0; row < boardSize; row++) {
+    for (let col = 0; col < boardSize; col++) {
+      const cell1 = document.createElement("div");
+      cell1.classList.add("cell1");
+      cell1.dataset.row = row;
+      cell1.dataset.col = col;
+      // 観測結果に応じてマークを設定
+      switch (board_result[row][col]){
+        case "黒":
+          cell1.textContent = "●";
+          cell1.style.fontSize = "64px"; // 丸だけ個別にサイズ設定
+          break;
+        case "白":
+          cell1.textContent = "○";
+          cell1.style.fontSize = "64px"; // 丸だけ個別にサイズ設定
+          break;
+        case "入ってない":
+          cell1.textContent = "";
+          break;
+        default:
+          cell1.textContent = "error";
+          console.log("board_result[" + row + "][" + col + "]に不適切な文字列が格納されています。");
+      }
+      copy_boardElement.appendChild(cell1);
+    }
+  }
+
   console.log(board_result);
 
-  console.log(hasFiveConsecutiveCircles("黒"));
-  console.log(hasFiveConsecutiveCircles("白"));
+  // 処理時間短縮のため5連判定のブール値は保存(グローバル変数)
+  hFCC_b = hasFiveConsecutiveCircles(board_result, "黒");
+  hFCC_w = hasFiveConsecutiveCircles(board_result, "白");
+  console.log(hFCC_b);
+  console.log(hFCC_w);
+  // ブール値から勝者を判定
+  if (hFCC_b && hFCC_w){ // 両者同時：観測した方の勝ち
+    messageElement.textContent = `${currentPlayer} さんの勝ち！`;
+  }else if (hFCC_b && !hFCC_w){
+    messageElement.textContent = `${blackPlayer} さんの勝ち！`;
+  }else if (!hFCC_b && hFCC_w){
+    messageElement.textContent = `${whitePlayer} さんの勝ち！`;
+  }else{
+    messageElement.textContent = `並ばず・・・`;
+    enableClicks();
+    // 「確率の盤面へ」のボタンが有効。
+    document.getElementById("observation").disabled = true;
+    document.getElementById("no_observation").disabled = true;
+    document.getElementById("switchBoard").disabled = false;
+  }
+  // ボタンの無効化設定
+  // ゲームが終了した時は、最終盤面を切り替えて見れるようにする。
+  if (hFCC_b || hFCC_w){
+    document.getElementById("observation").disabled = true;
+    document.getElementById("no_observation").disabled = true;
+    document.getElementById("switchBoard").disabled = false;
+    document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
+  }
+}
+
+// 観測なしでターンが変わる関数
+// 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
+function no_observation(){
+  // 現在のプレイヤーと待機プレイヤーを入れ替え
+  [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
+  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+  enableClicks();
+  // ボタンの無効化設定
+  document.getElementById("observation").disabled = true;
+  document.getElementById("no_observation").disabled = true;
+  document.getElementById("switchBoard").disabled = true;
 }
 
 //board_resultを使って勝利判定する
-
-// "〇"が5個以上連続して並んでいるかどうかを判定する関数
-function hasFiveConsecutiveCircles(targetSymbol) {
+// 対象のシンボルが5個以上連続して並んでいるかどうかを判定する関数
+function hasFiveConsecutiveCircles(board_result, targetSymbol) {
   const consecutiveCountNeeded = 5;
 
   // 横方向の判定
@@ -258,6 +277,38 @@ function hasFiveConsecutiveCircles(targetSymbol) {
   }
 
   return false; // 5個以上連続している場所が見つからない場合はfalseを返す
+}
+
+// 盤面のクリックを阻止する関数
+function disableClicks(){
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach(cell => cell.removeEventListener("click", onCellClick));
+}
+
+// 盤面のクリックを許可する関数
+function enableClicks(){
+  const cells = document.querySelectorAll(".cell");
+  cells.forEach(cell => cell.addEventListener("click", onCellClick));
+}
+
+// 確率の盤面と観測結果の盤面を行き来する関数
+function switchBoard(){
+  if (getComputedStyle(boardElement).display === "grid"){
+    boardElement.style.display = "none";
+    copy_boardElement.style.display = "grid";
+  }else{
+    boardElement.style.display = "grid";
+    copy_boardElement.style.display = "none";
+    // ボタンの無効化設定
+    if (!hFCC_b && !hFCC_w) {
+      // 観測するも5連続が無く、確率の盤面へ戻る場合。
+      [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
+      messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+      document.getElementById("observation").disabled = true;
+      document.getElementById("no_observation").disabled = true;
+      document.getElementById("switchBoard").disabled = true;
+    }
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

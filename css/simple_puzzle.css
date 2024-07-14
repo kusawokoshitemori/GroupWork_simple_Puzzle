@@ -7,7 +7,13 @@ body {
 
 #board {
   display: grid;
-  grid-template-columns: repeat(15, 40px);
+  gap: 5px;
+  justify-content: center;
+  margin: 20px auto;
+}
+
+#copy_board {
+  display: grid;
   gap: 5px;
   justify-content: center;
   margin: 20px auto;
