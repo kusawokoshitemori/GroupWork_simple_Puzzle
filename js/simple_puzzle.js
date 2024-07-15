@@ -1,23 +1,22 @@
 const boardSize = 15;
 let board = [];
-//変更予定
-const blackPlayer = "たろう"; // 先手
-const whitePlayer = "はなこ"; // 後手
+let blackPlayer = "たろう"; // 先手
+let whitePlayer = "はなこ"; // 後手
 let currentPlayer = blackPlayer;
 let waitingPlayer = whitePlayer;
-// 観測回数の制限
-let blackObservations = 3; 
-let whiteObservations = 3; 
+let blackObservations = 3;
+let whiteObservations = 3;
+let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
 
 const boardElement = document.getElementById("board");
+const copy_boardElement = document.getElementById("copy_board");
+const messageElement = document.getElementById("message");
+
 // boardsizeに対応したグリッドレイアウト
 boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
 boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
-const copy_boardElement = document.getElementById("copy_board");
-// boardsizeに対応したグリッドレイアウト
 copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
 copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
-const messageElement = document.getElementById("message");
 
 var isEnd = false; // ゲーム終了を表すフラグ（グローバル）
 
@@ -33,12 +32,7 @@ function createBoard() {
   document.getElementById("switchBoard").disabled = true;
 
   // 観測回数の制限
-  blackObservations = 3; 
-  whiteObservations = 3; 
-
-  board = Array(boardSize)
-    .fill(null)
-    .map(() => Array(boardSize).fill(""));
+  board = Array(boardSize).fill(null).map(() => Array(boardSize).fill(""));
   boardElement.innerHTML = ""; // 初期化
   for (let row = 0; row < boardSize; row++) {
     for (let col = 0; col < boardSize; col++) {
@@ -52,7 +46,7 @@ function createBoard() {
   enableClicks();
   //currentPlayerがplayersになってる。textの微変更
   messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
-
+  
   // 残りの観測回数を表示するために呼び出し
   updateObservationCount();
 }
@@ -71,10 +65,8 @@ function onCellClick(event) {
   if (board[row][col] === "") {
     board[row][col] = players[currentPlayerIndex];
     event.target.textContent = players[currentPlayerIndex];
-
     // プレイヤーの駒に対応するCSSクラスを追加
     event.target.classList.add(getPieceClass(players[currentPlayerIndex]));
-
     // 観測する・しないの選択待ちに入る。
     disableClicks();
     // ボタンの無効化設定
@@ -82,13 +74,13 @@ function onCellClick(event) {
     document.getElementById("observation").disabled = false;
     document.getElementById("no_observation").disabled = false;
     document.getElementById("switchBoard").disabled = true;
-    // 次に置く駒を変更（観測の有無に関係しない）
+    // 次に置く駒を変更（観測の有無に関係しない
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   }
 }
 
 // 駒の値に基づいて適切なCSSクラスを返す関数
-function getPieceClass(value) { 
+function getPieceClass(value) {
   switch (value) {
     case 90:
       return 'black-90';
@@ -108,15 +100,17 @@ function resetGame() {
   currentPlayerIndex = 0;
   currentPlayer = blackPlayer;
   waitingPlayer = whitePlayer;
+  blackObservations = initialObservations; // リセット時に観測回数を初期値に戻す
+  whiteObservations = initialObservations; // リセット時に観測回数を初期値に戻す
   document.getElementById("switchBoard").textContent = "確率の盤面へ";
   isEnd = false;
-  createBoard();
+  showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
 }
 
 // 残りの観測回数を表示する関数 
 function updateObservationCount() {
-  document.getElementById("blackObservations").textContent = `たろうさんの残り観測回数: ${blackObservations}`;
-  document.getElementById("whiteObservations").textContent = `はなこさんの残り観測回数: ${whiteObservations}`;
+  document.getElementById("blackObservations").textContent = `${blackPlayer} さんの残り観測回数: ${blackObservations}`;
+  document.getElementById("whiteObservations").textContent = `${whitePlayer} さんの残り観測回数: ${whiteObservations}`;
 }
 
 //観測する関数
@@ -142,16 +136,12 @@ function observation() {
   for (let row = 0; row < boardSize; row++) {
     const board_result_row = [];
     for (let col = 0; col < boardSize; col++) {
-      //１までの乱数
       const randomDecimal = Math.random();
       if (board[row][col] === "") {
-        console.log("何も入ってない");
         board_result_row.push("入ってない");
       } else if (board[row][col] / 100 >= randomDecimal) {
-        console.log("黒です");
         board_result_row.push("黒");
       } else {
-        console.log("白です");
         board_result_row.push("白");
       }
     }
@@ -197,19 +187,19 @@ function observation() {
   console.log(hFCC_b);
   console.log(hFCC_w);
   // ブール値から勝者を判定
-  if (hFCC_b && hFCC_w){ // 両者同時：観測した方の勝ち
+  if (hFCC_b && hFCC_w) {
     messageElement.textContent = `${currentPlayer} さんの勝ち！`;
     isEnd = true;
-  }else if (hFCC_b && !hFCC_w){
+  } else if (hFCC_b && !hFCC_w) { // 両者同時：観測した方の勝ち
     messageElement.textContent = `${blackPlayer} さんの勝ち！`;
     isEnd = true;
-  }else if (!hFCC_b && hFCC_w){
+  } else if (!hFCC_b && hFCC_w) {
     messageElement.textContent = `${whitePlayer} さんの勝ち！`;
     isEnd = true;
   } else if (blackObservations === 0 && whiteObservations === 0) { //　残りの観測回数が両者0
     messageElement.textContent = `引き分け・・・`;
     isEnd = true;
-  }else{
+  } else {
     messageElement.textContent = `並ばず・・・`;
     enableClicks();
     // 「確率の盤面へ」のボタンが有効。
@@ -219,20 +209,19 @@ function observation() {
   }
   // ボタンの無効化設定
   // ゲームが終了した時は、最終盤面を切り替えて見れるようにする。
-  if (isEnd){
+  if (isEnd) {
     document.getElementById("observation").disabled = true;
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = false;
     document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
   }
 }
-
 // 観測なしでターンが変わる関数
 // 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
 function no_observation(){
   // 現在のプレイヤーと待機プレイヤーを入れ替え
   [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
-  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+  messageElement.textContent = `${currentPlayer} さんの番です。`;
   enableClicks();
   // ボタンの無効化設定
   document.getElementById("observation").disabled = true;
@@ -276,16 +265,8 @@ function hasFiveConsecutiveCircles(board_result, targetSymbol) {
   }
 
   // 斜め方向（左上から右下）
-  for (
-    let startRow = 0;
-    startRow <= boardSize - consecutiveCountNeeded;
-    startRow++
-  ) {
-    for (
-      let startCol = 0;
-      startCol <= boardSize - consecutiveCountNeeded;
-      startCol++
-    ) {
+  for (let startRow = 0; startRow <= boardSize - consecutiveCountNeeded; startRow++) {
+    for (let startCol = 0; startCol <= boardSize - consecutiveCountNeeded; startCol++) {
       let consecutiveCount = 0;
       for (let i = 0; i < consecutiveCountNeeded; i++) {
         if (board_result[startRow + i][startCol + i] === targetSymbol) {
@@ -301,16 +282,8 @@ function hasFiveConsecutiveCircles(board_result, targetSymbol) {
   }
 
   // 斜め方向（右上から左下）
-  for (
-    let startRow = 0;
-    startRow <= boardSize - consecutiveCountNeeded;
-    startRow++
-  ) {
-    for (
-      let startCol = consecutiveCountNeeded - 1;
-      startCol < boardSize;
-      startCol++
-    ) {
+  for (let startRow = 0; startRow <= boardSize - consecutiveCountNeeded; startRow++) {
+    for (let startCol = consecutiveCountNeeded - 1; startCol < boardSize; startCol++) {
       let consecutiveCount = 0;
       for (let i = 0; i < consecutiveCountNeeded; i++) {
         if (board_result[startRow + i][startCol - i] === targetSymbol) {
@@ -345,7 +318,7 @@ function switchBoard(){
   if (getComputedStyle(boardElement).display === "grid"){
     boardElement.style.display = "none";
     copy_boardElement.style.display = "grid";
-  }else{
+  } else {
     boardElement.style.display = "grid";
     copy_boardElement.style.display = "none";
     // ボタンの無効化設定
@@ -363,3 +336,29 @@ function switchBoard(){
 document.addEventListener("DOMContentLoaded", () => {
   createBoard();
 });
+
+// プレイヤー名の入力を取得してゲームを開始する関数
+function submitUserInputs() {
+    const blackPlayerInput = document.getElementById('blackPlayerInput').value;
+    const whitePlayerInput = document.getElementById('whitePlayerInput').value;
+    const observationsInput = parseInt(document.getElementById('observationsInput').value);
+
+    blackPlayer = blackPlayerInput;
+    whitePlayer = whitePlayerInput;
+    blackObservations = observationsInput;
+    whiteObservations = observationsInput;
+    initialObservations = observationsInput; // 初期観測回数を設定
+
+    updateObservationCount();
+    closePopup();
+    createBoard(); // 盤面を作成する
+    currentPlayer = blackPlayer;
+    waitingPlayer = whitePlayer;
+    messageElement.textContent = `${currentPlayer} さんの番です。`; // メッセージを更新
+}
+
+// リセット時にプレイヤー名と観測回数の入力ポップアップを表示する関数
+function showUserInputPopup() {
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('userInputPopup').style.display = 'block';
+}
