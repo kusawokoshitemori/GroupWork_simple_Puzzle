@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>量子五目並べ</title>
-    <link rel="stylesheet" href="css/simple_puzzle.css" />
-
-    <script defer src="js/simple_puzzle.js"></script>
-  </head>
-
-  <body>
+    <link rel="stylesheet" href="simple_puzzle.css">
+    <script defer src="simple_puzzle.js"></script>
+</head>
+<body>
     <div id="title-container">
-      <h1>量子五目並べ</h1>
-      <button id="infoButton" title="ルール説明" onclick="showPopup()">&#x2753;</button> <!-- title属性を追加 -->
-  </div>
+        <h1>量子五目並べ</h1>
+        <button id="infoButton" title="ルール説明" onclick="showRulesPopup()">&#x2753;</button> <!-- title属性を追加 -->
+    </div>
     <!--盤面を表示-->
     <div id="board"></div>
     <div id="copy_board"></div>
@@ -25,38 +23,106 @@
     <!--残りの観測回数の表示-->
     <p id="blackObservations">たろうさんの残り観測回数: 3</p>
     <p id="whiteObservations">はなこさんの残り観測回数: 3</p>
+
+    <!-- オーバーレイとポップアップ -->
     <div id="overlay" class="overlay"></div>
     <div id="popup" class="popup">
         <h2>ルール説明</h2>
         <p>1. 基本ルール:<br>
-           - 通常の五目並べと同じように、縦・横・斜めに同じ色の石を5つ並べることを目指します。</p>
-        <p>2. 量子の要素:<br>
-           - プレイヤーが置く石は確定した色ではなく、確率的に黒または白になる「量子石」となっています。<br>
-           - 例えば、黒が90%の確率で出現し、白が10%の確率で出現する石や、その逆の石などが存在します。</p>
-        <p>3. 観測:<br>
-           - プレイヤーは自分のターンで石を置いた後に、その石を「観測」することができます。<br>
-           - 観測を行うと、盤面の石の色が確定します。また、観測するかどうかを選択しなければ、次のプレイヤーは石を置くことができません。</p>
-        <p>4. 勝利条件:<br>
-           - 観測を行った結果、縦・横・斜めに同じ色の石が5つ並んだ場合、そのプレイヤーの勝利となります。<br>
-           - 各プレイヤーは観測を行える回数に制限があります。例えば、観測を行える回数が3回までと設定されている場合、それを超える観測は行えません。<br>
-           - もし、双方のプレイヤーが観測を行いきっても5目が揃わなかった場合、引き分けとなります。</p>
-        <button onclick="closePopup()">閉じる</button>
+          - 通常の五目並べと同じように、縦・横・斜めに同じ色の石を5つ並べることを目指します。</p>
+      <p>2. 量子の要素:<br>
+          - プレイヤーが置く石は確定した色ではなく、確率的に黒または白になる「量子石」となっています。<br>
+          - 例えば、黒が90%の確率で出現し、白が10%の確率で出現する石や、その逆の石などが存在します。</p>
+      <p>3. 観測:<br>
+          - プレイヤーは自分のターンで石を置いた後に、その石を「観測」することができます。<br>
+          - 観測を行うと、盤面の石の色が確定します。<br>
+          - 観測するかどうかを選択しなければ、次のプレイヤーは石を置くことができません。</p>
+      <p>4. 勝利条件:<br>
+          - 観測を行った結果、縦・横・斜めに同じ色の石が5つ並んだ場合、そのプレイヤーの勝利となります。<br>
+          - 各プレイヤーは観測を行える回数に制限があります。例えば、観測を行える回数が3回までと設定されている場合、それを超える観測は行えません。<br>
+          - もし、双方のプレイヤーが観測を行いきっても5目が揃わなかった場合、引き分けとなります。</p>
+        <button onclick="closeRulesPopup()">閉じる</button>
     </div>
-    <script src="js/simple_puzzle.js"></script>
+
+    <!-- プレイヤー名の入力ポップアップ -->
+    <div id="userInputPopup" class="popup">
+        <h2>プレイヤー名と観測回数の設定</h2>
+        <p>プレイヤー名を入力してください:</p>
+        <label for="blackPlayer">先攻(黒):</label>
+        <input type="text" id="blackPlayerInput" value="たろう"><br>
+        <label for="whitePlayer">後攻(白):</label>
+        <input type="text" id="whitePlayerInput" value="はなこ"><br>
+        <p>観測回数を入力してください:</p>
+        <input type="number" id="observationsInput" value="3"><br>
+        <button onclick="submitUserInputs()">OK</button>
+    </div>
+    <script src="simple_puzzle.js"></script>
     <script>
-        window.onload = function() {
-            showPopup();
-        };
+      let rulesPopupCloseCount = 0; // ルール説明ポップアップが閉じられた回数をカウントする変数
 
-        function showPopup() {
-            document.getElementById('overlay').style.display = 'block';
-            document.getElementById('popup').style.display = 'block';
-        }
+      // 初回ロード時にルール説明とユーザー入力のポップアップを表示する
+      window.onload = function() {
+        rulesPopupCloseCount = 0; // 初期値として0を設定
+        showPopup(true);
+      };
 
-        function closePopup() {
-            document.getElementById('overlay').style.display = 'none';
-            document.getElementById('popup').style.display = 'none';
+      // はてなボタンを押したときにルール説明のみを表示する関数
+      function showRulesPopup() {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+        document.getElementById('userInputPopup').style.display = 'none';
+        rulesPopupCloseCount += 1; // 変数に1を足す
+        console.log('Rules popup closed count:', rulesPopupCloseCount); // コンソールに表示
+      }
+
+      // ポップアップを表示する関数。initialがtrueなら初回表示用
+      function showPopup(initial) {
+        document.getElementById('overlay').style.display = 'block';
+        document.getElementById('popup').style.display = 'block';
+        if (initial) {
+          document.getElementById('userInputPopup').style.display = 'none';
         }
+      }
+
+      // ルール説明ポップアップを閉じてユーザー入力ポップアップを表示する関数
+      function closeRulesPopup() {
+        document.getElementById('popup').style.display = 'none';
+        rulesPopupCloseCount += 1; // 変数に1を足す
+        if (rulesPopupCloseCount === 1) {
+          document.getElementById('userInputPopup').style.display = 'block';
+        }
+        else {
+          document.getElementById('overlay').style.display = 'none';
+        }
+        console.log('Rules popup closed count:', rulesPopupCloseCount); // コンソールに表示
+      }
+
+      // すべてのポップアップを閉じる関数
+      function closePopup() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('popup').style.display = 'none';
+        document.getElementById('userInputPopup').style.display = 'none';
+      }
+
+      // プレイヤー名の入力を取得してゲームを開始する関数
+      function submitUserInputs() {
+        const blackPlayerInput = document.getElementById('blackPlayerInput').value;
+        const whitePlayerInput = document.getElementById('whitePlayerInput').value;
+        const observationsInput = parseInt(document.getElementById('observationsInput').value);
+
+        blackPlayer = blackPlayerInput;
+        whitePlayer = whitePlayerInput;
+        blackObservations = observationsInput;
+        whiteObservations = observationsInput;
+        initialObservations = observationsInput; // 初期観測回数を設定
+
+        updateObservationCount();
+        closePopup();
+        createBoard(); // 盤面を作成する
+        currentPlayer = blackPlayer;
+        waitingPlayer = whitePlayer;
+        messageElement.textContent = `${currentPlayer} さんの番です。`; // メッセージを更新
+      }
     </script>
-  </body>
+</body>
 </html>
