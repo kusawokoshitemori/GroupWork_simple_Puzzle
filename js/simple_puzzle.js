@@ -5,6 +5,9 @@ const blackPlayer = "たろう"; // 先手
 const whitePlayer = "はなこ"; // 後手
 let currentPlayer = blackPlayer;
 let waitingPlayer = whitePlayer;
+// 観測回数の制限
+let blackObservations = 3; 
+let whiteObservations = 3; 
 
 const boardElement = document.getElementById("board");
 // boardsizeに対応したグリッドレイアウト
@@ -30,6 +33,9 @@ function createBoard() {
   // 5連判定のブール値初期化
   hFCC_b = false;
   hFCC_w = false;
+  // 観測回数の制限
+  blackObservations = 3; 
+  whiteObservations = 3; 
 
   board = Array(boardSize)
     .fill(null)
@@ -47,6 +53,9 @@ function createBoard() {
   enableClicks();
   //currentPlayerがplayersになってる。textの微変更
   messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+
+  // 残りの観測回数を表示するために呼び出し
+  updateObservationCount();
 }
 
 //置く駒の配列&初期化
@@ -64,6 +73,9 @@ function onCellClick(event) {
     board[row][col] = players[currentPlayerIndex];
     event.target.textContent = players[currentPlayerIndex];
 
+    // プレイヤーの駒に対応するCSSクラスを追加
+    event.target.classList.add(getPieceClass(players[currentPlayerIndex]));
+
     // 観測する・しないの選択待ちに入る。
     disableClicks();
     // ボタンの無効化設定
@@ -76,6 +88,22 @@ function onCellClick(event) {
   }
 }
 
+// 駒の値に基づいて適切なCSSクラスを返す関数
+function getPieceClass(value) { 
+  switch (value) {
+    case 90:
+      return 'black-90';
+    case 70:
+      return 'black-70';
+    case 30:
+      return 'white-30';
+    case 10:
+      return 'white-10';
+    default:
+      return '';
+  }
+}
+
 // 先手(blackPlayer)からゲームをリスタートする関数
 function resetGame() {
   currentPlayerIndex = 0;
@@ -85,12 +113,28 @@ function resetGame() {
   createBoard();
 }
 
+// 残りの観測回数を表示する関数 
+function updateObservationCount() {
+  document.getElementById("blackObservations").textContent = `たろうさんの残り観測回数: ${blackObservations}`;
+  document.getElementById("whiteObservations").textContent = `はなこさんの残り観測回数: ${whiteObservations}`;
+}
+
 //観測する関数
 console.log("読み込み開始");
 
 //観測する関数
 var hFCC_b, hFCC_w; // 5連判定のブール値は、switchBoardで参照したいからグローバル変数。
 function observation() {
+  // 観測可能かチェック
+  if (currentPlayer === blackPlayer && blackObservations > 0) {
+    blackObservations--; // 観測回数を1減らす
+  } else if (currentPlayer === whitePlayer && whiteObservations > 0) {
+    whiteObservations--; // 観測回数を1減らす
+  } else {
+    return;
+  }
+  updateObservationCount(); // 残りの観測回数を表示するために呼び出し
+
   //判定後はこの配列の中に入れる
   const board_result = []; // 初期化
 
@@ -160,6 +204,8 @@ function observation() {
     messageElement.textContent = `${blackPlayer} さんの勝ち！`;
   }else if (!hFCC_b && hFCC_w){
     messageElement.textContent = `${whitePlayer} さんの勝ち！`;
+  } else if (blackObservations === 0 && whiteObservations === 0) { //　残りの観測回数が両者0
+    messageElement.textContent = `引き分け・・・`;
   }else{
     messageElement.textContent = `並ばず・・・`;
     enableClicks();
