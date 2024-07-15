@@ -3,14 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>量子五目並べ</title>
     <link rel="stylesheet" href="css/simple_puzzle.css" />
 
     <script defer src="js/simple_puzzle.js"></script>
   </head>
 
   <body>
-    <h1>量子五目並べ</h1>
+    <div id="title-container">
+      <h1>量子五目並べ</h1>
+      <button id="infoButton" title="ルール説明" onclick="showPopup()">&#x2753;</button> <!-- title属性を追加 -->
+  </div>
     <!--盤面を表示-->
     <div id="board"></div>
     <div id="copy_board"></div>
@@ -22,5 +25,38 @@
     <!--残りの観測回数の表示-->
     <p id="blackObservations">たろうさんの残り観測回数: 3</p>
     <p id="whiteObservations">はなこさんの残り観測回数: 3</p>
+    <div id="overlay" class="overlay"></div>
+    <div id="popup" class="popup">
+        <h2>ルール説明</h2>
+        <p>1. 基本ルール:<br>
+           - 通常の五目並べと同じように、縦・横・斜めに同じ色の石を5つ並べることを目指します。</p>
+        <p>2. 量子の要素:<br>
+           - プレイヤーが置く石は確定した色ではなく、確率的に黒または白になる「量子石」となっています。<br>
+           - 例えば、黒が90%の確率で出現し、白が10%の確率で出現する石や、その逆の石などが存在します。</p>
+        <p>3. 観測:<br>
+           - プレイヤーは自分のターンで石を置いた後に、その石を「観測」することができます。<br>
+           - 観測を行うと、その石の色が確定します。観測を行わないと、次のターンで他の石を置くことができません。</p>
+        <p>4. 勝利条件:<br>
+           - 観測を行った結果、縦・横・斜めに同じ色の石が5つ並んだ場合、そのプレイヤーの勝利となります。<br>
+           - 各プレイヤーは観測を行える回数に制限があります。例えば、観測を行える回数が3回までと設定されている場合、それを超える観測は行えません。<br>
+           - もし、双方のプレイヤーが観測を行いきっても5目が揃わなかった場合、引き分けとなります。</p>
+        <button onclick="closePopup()">閉じる</button>
+    </div>
+    <script src="js/simple_puzzle.js"></script>
+    <script>
+        window.onload = function() {
+            showPopup();
+        };
+
+        function showPopup() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('popup').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('popup').style.display = 'none';
+        }
+    </script>
   </body>
 </html>
