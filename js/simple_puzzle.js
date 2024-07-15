@@ -291,7 +291,7 @@ function hasFiveConsecutiveCircles(board_result, targetSymbol) {
             return true; // 5個以上連続している場合はtrueを返す
           }
         } else {
-          consecutiveCount = 0; // 連続していない場合はカウントをリセット
+          break; // 1回でもelseに入ったら5連続の可能性消滅
         }
       }
     }
@@ -316,7 +316,7 @@ function hasFiveConsecutiveCircles(board_result, targetSymbol) {
             return true; // 5個以上連続している場合はtrueを返す
           }
         } else {
-          consecutiveCount = 0; // 連続していない場合はカウントをリセット
+          break; // 1回でもelseに入ったら5連続の可能性消滅
         }
       }
     }
