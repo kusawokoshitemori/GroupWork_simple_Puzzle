@@ -19,6 +19,8 @@ copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
 copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
 const messageElement = document.getElementById("message");
 
+var isEnd = false; // ゲーム終了を表すフラグ（グローバル）
+
 //ボード作成
 function createBoard() {
   // 盤面の初期化
@@ -30,9 +32,6 @@ function createBoard() {
   document.getElementById("no_observation").disabled = true;
   document.getElementById("switchBoard").disabled = true;
 
-  // 5連判定のブール値初期化
-  hFCC_b = false;
-  hFCC_w = false;
   // 観測回数の制限
   blackObservations = 3; 
   whiteObservations = 3; 
@@ -110,6 +109,7 @@ function resetGame() {
   currentPlayer = blackPlayer;
   waitingPlayer = whitePlayer;
   document.getElementById("switchBoard").textContent = "確率の盤面へ";
+  isEnd = false;
   createBoard();
 }
 
@@ -123,7 +123,6 @@ function updateObservationCount() {
 console.log("読み込み開始");
 
 //観測する関数
-var hFCC_b, hFCC_w; // 5連判定のブール値は、switchBoardで参照したいからグローバル変数。
 function observation() {
   // 観測可能かチェック
   if (currentPlayer === blackPlayer && blackObservations > 0) {
@@ -192,20 +191,24 @@ function observation() {
 
   console.log(board_result);
 
-  // 処理時間短縮のため5連判定のブール値は保存(グローバル変数)
-  hFCC_b = hasFiveConsecutiveCircles(board_result, "黒");
-  hFCC_w = hasFiveConsecutiveCircles(board_result, "白");
+  // 処理時間短縮のため5連判定のブール値は保存
+  let hFCC_b = hasFiveConsecutiveCircles(board_result, "黒");
+  let hFCC_w = hasFiveConsecutiveCircles(board_result, "白");
   console.log(hFCC_b);
   console.log(hFCC_w);
   // ブール値から勝者を判定
   if (hFCC_b && hFCC_w){ // 両者同時：観測した方の勝ち
     messageElement.textContent = `${currentPlayer} さんの勝ち！`;
+    isEnd = true;
   }else if (hFCC_b && !hFCC_w){
     messageElement.textContent = `${blackPlayer} さんの勝ち！`;
+    isEnd = true;
   }else if (!hFCC_b && hFCC_w){
     messageElement.textContent = `${whitePlayer} さんの勝ち！`;
+    isEnd = true;
   } else if (blackObservations === 0 && whiteObservations === 0) { //　残りの観測回数が両者0
     messageElement.textContent = `引き分け・・・`;
+    isEnd = true;
   }else{
     messageElement.textContent = `並ばず・・・`;
     enableClicks();
@@ -216,7 +219,7 @@ function observation() {
   }
   // ボタンの無効化設定
   // ゲームが終了した時は、最終盤面を切り替えて見れるようにする。
-  if (hFCC_b || hFCC_w){
+  if (isEnd){
     document.getElementById("observation").disabled = true;
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = false;
@@ -346,8 +349,8 @@ function switchBoard(){
     boardElement.style.display = "grid";
     copy_boardElement.style.display = "none";
     // ボタンの無効化設定
-    if (!hFCC_b && !hFCC_w) {
-      // 観測するも5連続が無く、確率の盤面へ戻る場合。
+    // 観測するも5連続が無く、確率の盤面へ戻る場合。
+    if (!isEnd) {
       [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
       messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
       document.getElementById("observation").disabled = true;
