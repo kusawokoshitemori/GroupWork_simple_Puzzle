@@ -108,15 +108,15 @@
       function submitUserInputs() {
         const blackPlayerInput = document.getElementById('blackPlayerInput').value;
         const whitePlayerInput = document.getElementById('whitePlayerInput').value;
-        const observationsInput = parseInt(document.getElementById('observationsInput').value);
+        const observationsInput = document.getElementById('observationsInput').value;
         // 空欄チェック
         if (blackPlayerInput === "" || whitePlayerInput === "") {
             alert("プレイヤー名を入力してください。");
             return;
         }
+        const observations = Number(observationsInput);
         // 観測回数の入力値チェック
-        const observations = parseInt(observationsInput);
-        if (isNaN(observations) || observations < 1) {
+        if (isNaN(observations) || observations < 1 || !Number.isInteger(observations)) {
             alert("観測回数は1以上の整数を入力してください。");
             return;
         }
