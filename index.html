@@ -53,7 +53,7 @@
         <label for="whitePlayer">後攻(白):</label>
         <input type="text" id="whitePlayerInput" value="はなこ"><br>
         <p>観測回数を入力してください:</p>
-        <input type="number" id="observationsInput" value="3"><br>
+        <input type="number" id="observationsInput" value="3" min="1" step="1"><br>
         <button onclick="submitUserInputs()">OK</button>
     </div>
     <script src="js/simple_puzzle.js"></script>
@@ -109,7 +109,17 @@
         const blackPlayerInput = document.getElementById('blackPlayerInput').value;
         const whitePlayerInput = document.getElementById('whitePlayerInput').value;
         const observationsInput = parseInt(document.getElementById('observationsInput').value);
+        // 空欄チェック
+        if (blackPlayerInput === "" || whitePlayerInput === "") {
+            alert("プレイヤー名を入力してください。");
+            return;
+        }
 
+        const observations = parseInt(observationsInput);
+        if (isNaN(observations) || observations < 1) {
+            alert("観測回数は1以上の整数を入力してください。");
+            return;
+        }
         blackPlayer = blackPlayerInput;
         whitePlayer = whitePlayerInput;
         blackObservations = observationsInput;

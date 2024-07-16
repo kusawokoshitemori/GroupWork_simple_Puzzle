@@ -337,28 +337,8 @@ document.addEventListener("DOMContentLoaded", () => {
   createBoard();
 });
 
-// プレイヤー名の入力を取得してゲームを開始する関数
-function submitUserInputs() {
-    const blackPlayerInput = document.getElementById('blackPlayerInput').value;
-    const whitePlayerInput = document.getElementById('whitePlayerInput').value;
-    const observationsInput = parseInt(document.getElementById('observationsInput').value);
-
-    blackPlayer = blackPlayerInput;
-    whitePlayer = whitePlayerInput;
-    blackObservations = observationsInput;
-    whiteObservations = observationsInput;
-    initialObservations = observationsInput; // 初期観測回数を設定
-
-    updateObservationCount();
-    closePopup();
-    createBoard(); // 盤面を作成する
-    currentPlayer = blackPlayer;
-    waitingPlayer = whitePlayer;
-    messageElement.textContent = `${currentPlayer} さんの番です。`; // メッセージを更新
-}
-
 // リセット時にプレイヤー名と観測回数の入力ポップアップを表示する関数
 function showUserInputPopup() {
-    document.getElementById('overlay').style.display = 'block';
-    document.getElementById('userInputPopup').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+  document.getElementById('userInputPopup').style.display = 'block';
 }
