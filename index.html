@@ -131,7 +131,7 @@
         createBoard(); // 盤面を作成する
         currentPlayer = blackPlayer;
         waitingPlayer = whitePlayer;
-        messageElement.textContent = `${currentPlayer} さんの番です。`; // メッセージを更新
+        messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
       }
     </script>
 </body>

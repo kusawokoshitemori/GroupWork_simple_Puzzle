@@ -221,7 +221,7 @@ function observation() {
 function no_observation(){
   // 現在のプレイヤーと待機プレイヤーを入れ替え
   [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
-  messageElement.textContent = `${currentPlayer} さんの番です。`;
+  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
   enableClicks();
   // ボタンの無効化設定
   document.getElementById("observation").disabled = true;
