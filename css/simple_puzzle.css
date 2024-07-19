@@ -114,21 +114,17 @@ button:disabled {
   margin-top: 20px;
 }
 
-/* 追加部分: 〇の中に？が書かれたボタンのスタイル */
 #infoButton {
-  background-color: white;
-  border: 2px solid black;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  font-size: 24px;
-  line-height: 40px; /* 縦方向の中央揃え */
-  text-align: center; /* 横方向の中央揃え */
+  background-color: #007BFF;
+  color: white;
+  border: none;
+  font-size: 20px;
+  line-height: 30px;
+  text-align: center;
   cursor: pointer;
-  margin-left: 10px; /* タイトルとの間隔調整 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
 #turnDisplay {
@@ -144,4 +140,5 @@ button:disabled {
 /* メインコンテンツが固定表示のターン数に隠れないようにする */
 body {
   padding-bottom: 50px; /* turnDisplayContainerの高さより少し大きめに */
+
 }
