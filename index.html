@@ -55,7 +55,7 @@
         <p>観測回数を入力してください:</p>
         <input type="number" id="observationsInput" value="3" min="1" step="1"><br>
         <button onclick="submitUserInputs()">OK</button>
-        <button id = "cancel_reset" onclick="closeUserInput()" style="display: none;">Cancel Reset</button>
+        <button id = "cancel_reset" onclick="closeUserInput()">Cancel Reset</button>
     </div>
     <script src="js/simple_puzzle.js"></script>
     <script>
@@ -80,6 +80,7 @@
       function showPopup(initial) {
         document.getElementById('overlay').style.display = 'block';
         document.getElementById('popup').style.display = 'block';
+        document.getElementById("cancel_reset").disabled = true;
         if (initial) {
           document.getElementById('userInputPopup').style.display = 'none';
         }
