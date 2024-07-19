@@ -7,6 +7,8 @@ let waitingPlayer = whitePlayer;
 let blackObservations = 3;
 let whiteObservations = 3;
 let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
+let turnCount = 1;
+let playerActionCount = 0; // プレイヤーの行動回数をカウント
 
 const boardElement = document.getElementById("board");
 const copy_boardElement = document.getElementById("copy_board");
@@ -49,6 +51,20 @@ function createBoard() {
   
   // 残りの観測回数を表示するために呼び出し
   updateObservationCount();
+  updateTurnDisplay();
+}
+
+function updateTurnDisplay() {
+  document.getElementById('turnNumber').textContent = turnCount;
+}
+
+function incrementTurn() {
+  playerActionCount++;
+  if (playerActionCount === 2) { // 両プレイヤーが行動したらターンを進める
+      turnCount++;
+      playerActionCount = 0;
+      updateTurnDisplay();
+  }
 }
 
 //置く駒の配列&初期化
@@ -104,6 +120,9 @@ function resetGame() {
   whiteObservations = initialObservations; // リセット時に観測回数を初期値に戻す
   document.getElementById("switchBoard").textContent = "確率の盤面へ";
   isEnd = false;
+  turnCount = 1;
+  playerActionCount = 0;
+  updateTurnDisplay();
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
 }
 
@@ -215,18 +234,21 @@ function observation() {
     document.getElementById("switchBoard").disabled = false;
     document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
   }
+incrementTurn();
 }
 // 観測なしでターンが変わる関数
 // 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
 function no_observation(){
   // 現在のプレイヤーと待機プレイヤーを入れ替え
   [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
-  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+  messageElement.textContent = `${currentPlayer} さんの番です。`;
   enableClicks();
   // ボタンの無効化設定
   document.getElementById("observation").disabled = true;
   document.getElementById("no_observation").disabled = true;
   document.getElementById("switchBoard").disabled = true;
+
+  incrementTurn(); // ターンのカウントを増やす
 }
 
 //board_resultを使って勝利判定する
@@ -335,6 +357,7 @@ function switchBoard(){
 
 document.addEventListener("DOMContentLoaded", () => {
   createBoard();
+  updateTurnDisplay();
 });
 
 // リセット時にプレイヤー名と観測回数の入力ポップアップを表示する関数

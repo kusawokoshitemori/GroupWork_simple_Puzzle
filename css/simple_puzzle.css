@@ -130,3 +130,18 @@ button:disabled {
   align-items: center;
   justify-content: center;
 }
+
+#turnDisplay {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 0;
+}
+
+#turnNumber {
+  color: #007bff; /* 数字の色を青に設定 */
+}
+
+/* メインコンテンツが固定表示のターン数に隠れないようにする */
+body {
+  padding-bottom: 50px; /* turnDisplayContainerの高さより少し大きめに */
+}
