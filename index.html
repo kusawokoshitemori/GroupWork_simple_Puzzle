@@ -55,6 +55,7 @@
         <p>観測回数を入力してください:</p>
         <input type="number" id="observationsInput" value="3" min="1" step="1"><br>
         <button onclick="submitUserInputs()">OK</button>
+        <button id = "cancel reset" onclick="closeUserInput()">cancel reset</button>
     </div>
     <script src="js/simple_puzzle.js"></script>
     <script>
@@ -103,7 +104,12 @@
         document.getElementById('popup').style.display = 'none';
         document.getElementById('userInputPopup').style.display = 'none';
       }
-
+      
+      // ユーザー入力画面をキャンセルする関数
+      function closeUserInput() {
+        document.getElementById('overlay').style.display = 'none';
+        document.getElementById('userInputPopup').style.display = 'none';
+      }
       // プレイヤー名の入力を取得してゲームを開始する関数
       function submitUserInputs() {
         const blackPlayerInput = document.getElementById('blackPlayerInput').value;
