@@ -123,6 +123,7 @@ function resetGame() {
   turnCount = 1;
   playerActionCount = 0;
   updateTurnDisplay();
+  document.getElementById('cancel_reset').style.display = 'block'; // 入力ポップアップのCancel Resetボタンを表示
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
 }
 
