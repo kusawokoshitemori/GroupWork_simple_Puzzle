@@ -113,6 +113,7 @@
       }
       // プレイヤー名の入力を取得してゲームを開始する関数
       function submitUserInputs() {
+        currentPlayerIndex = 0;
         const blackPlayerInput = document.getElementById('blackPlayerInput').value;
         const whitePlayerInput = document.getElementById('whitePlayerInput').value;
         const observationsInput = document.getElementById('observationsInput').value;

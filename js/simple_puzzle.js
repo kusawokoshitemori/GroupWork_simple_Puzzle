@@ -113,7 +113,6 @@ function getPieceClass(value) {
 
 // 先手(blackPlayer)からゲームをリスタートする関数
 function resetGame() {
-  currentPlayerIndex = 0;
   currentPlayer = blackPlayer;
   waitingPlayer = whitePlayer;
   blackObservations = initialObservations; // リセット時に観測回数を初期値に戻す
