@@ -6,7 +6,7 @@ let currentPlayer = blackPlayer;
 let waitingPlayer = whitePlayer;
 let blackObservations = 3;
 let whiteObservations = 3;
-let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
+//let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
 let turnCount = 1;
 let playerActionCount = 0; // プレイヤーの行動回数をカウント
 
@@ -113,15 +113,6 @@ function getPieceClass(value) {
 
 // 先手(blackPlayer)からゲームをリスタートする関数
 function resetGame() {
-  currentPlayer = blackPlayer;
-  waitingPlayer = whitePlayer;
-  blackObservations = initialObservations; // リセット時に観測回数を初期値に戻す
-  whiteObservations = initialObservations; // リセット時に観測回数を初期値に戻す
-  document.getElementById("switchBoard").textContent = "確率の盤面へ";
-  isEnd = false;
-  turnCount = 1;
-  playerActionCount = 0;
-  updateTurnDisplay();
   document.getElementById("cancel_reset").disabled = false;
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
 }

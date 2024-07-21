@@ -132,7 +132,7 @@
         whitePlayer = whitePlayerInput;
         blackObservations = observationsInput;
         whiteObservations = observationsInput;
-        initialObservations = observationsInput; // 初期観測回数を設定
+        //initialObservations = observationsInput; // 初期観測回数を設定
 
         updateObservationCount();
         closePopup();
@@ -140,6 +140,12 @@
         currentPlayer = blackPlayer;
         waitingPlayer = whitePlayer;
         messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
+        // 以下は、元々resetGame()の機能だったものを移譲してきた。
+        document.getElementById("switchBoard").textContent = "確率の盤面へ";
+        isEnd = false;
+        turnCount = 1;
+        playerActionCount = 0;
+        updateTurnDisplay();
       }
     </script>
       <p id="turnDisplay">ターン数: <span id="turnNumber">1</span></p>
