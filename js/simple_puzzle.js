@@ -137,12 +137,12 @@ function resetGame() {
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
   isObservationOnly = false;
   enableClicks();
+  const timeLimitSelect = document.getElementById('timeLimit');
+  timeLimit = parseInt(timeLimitSelect.value);
   clearInterval(timerInterval);
   timeRemaining = timeLimit;
   updateTimerDisplay();
-  if (timeLimit > 0) {
-    startTimer();
-  }
+  // タイマーは submitUserInputs 関数で開始するため、ここでは開始しない
 }
 
 // 残りの観測回数を表示する関数 
@@ -407,6 +407,9 @@ function startTimer() {
   if (timeLimit === 0) return; // 制限なしの場合は何もしない
 
   clearInterval(timerInterval); // 既存のタイマーをクリア
+  timeRemaining = timeLimit; // タイマーを開始する前に残り時間をリセット
+  updateTimerDisplay();
+
   timerInterval = setInterval(() => {
       timeRemaining--;
       updateTimerDisplay();
@@ -414,7 +417,7 @@ function startTimer() {
       if (timeRemaining <= 0) {
           clearInterval(timerInterval);
           messageElement.textContent = `時間切れで${waitingPlayer} さんの勝ち！`;
-          disableClicks()
+          disableClicks();
           document.getElementById("observation").disabled = true;
           document.getElementById("no_observation").disabled = true;
           document.getElementById("switchBoard").disabled = true;
@@ -424,7 +427,7 @@ function startTimer() {
 
 function updateTimerDisplay() {
   const timerElement = document.getElementById('timer');
-  if (timeLimit === -1) {
+  if (timeLimit === 0) {
       timerElement.textContent = '制限なし';
   } else {
       timerElement.textContent = `残り時間: ${timeRemaining}秒`;
