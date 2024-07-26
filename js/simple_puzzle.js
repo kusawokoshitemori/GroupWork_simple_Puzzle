@@ -9,6 +9,9 @@ let whiteObservations = 3;
 //let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
 let turnCount = 1;
 let playerActionCount = 0; // プレイヤーの行動回数をカウント
+let timeLimit = 0; // 時間制限（秒）
+let timeRemaining = 0; // 残り時間（秒）
+let timerInterval; // タイマーのインターバルID
 
 const boardElement = document.getElementById("board");
 const copy_boardElement = document.getElementById("copy_board");
@@ -115,6 +118,12 @@ function getPieceClass(value) {
 function resetGame() {
   document.getElementById("cancel_reset").disabled = false;
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
+  clearInterval(timerInterval);
+  timeRemaining = timeLimit;
+  updateTimerDisplay();
+  if (timeLimit > 0) {
+    startTimer();
+  }
 }
 
 // 残りの観測回数を表示する関数 
@@ -225,7 +234,8 @@ function observation() {
     document.getElementById("switchBoard").disabled = false;
     document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
   }
-incrementTurn();
+  switchTurntime()
+  incrementTurn();
 }
 // 観測なしでターンが変わる関数
 // 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
@@ -238,7 +248,7 @@ function no_observation(){
   document.getElementById("observation").disabled = true;
   document.getElementById("no_observation").disabled = true;
   document.getElementById("switchBoard").disabled = true;
-
+  switchTurntime()
   incrementTurn(); // ターンのカウントを増やす
 }
 
@@ -355,4 +365,40 @@ document.addEventListener("DOMContentLoaded", () => {
 function showUserInputPopup() {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById('userInputPopup').style.display = 'block';
+}
+
+function startTimer() {
+  if (timeLimit === 0) return; // 制限なしの場合は何もしない
+
+  clearInterval(timerInterval); // 既存のタイマーをクリア
+  timerInterval = setInterval(() => {
+      timeRemaining--;
+      updateTimerDisplay();
+
+      if (timeRemaining <= 0) {
+          clearInterval(timerInterval);
+          messageElement.textContent = `時間切れで${waitingPlayer} さんの勝ち！`;
+          disableClicks()
+          document.getElementById("observation").disabled = true;
+          document.getElementById("no_observation").disabled = true;
+          document.getElementById("switchBoard").disabled = true;
+      }
+  }, 1000);
+}
+
+function updateTimerDisplay() {
+  const timerElement = document.getElementById('timer');
+  if (timeLimit === -1) {
+      timerElement.textContent = '制限なし';
+  } else {
+      timerElement.textContent = `残り時間: ${timeRemaining}秒`;
+  }
+}
+function switchTurntime() {
+  // タイマーのリセットと再開
+  timeRemaining = timeLimit;
+  updateTimerDisplay();
+  if (timeLimit > 0) {
+      startTimer();
+  }
 }

@@ -54,6 +54,13 @@
         <input type="text" id="whitePlayerInput" value="はなこ"><br>
         <p>観測回数を入力してください:</p>
         <input type="number" id="observationsInput" value="3" min="1" step="1"><br>
+        <p>時間制限を設定してください:</p>
+        <select id="timeLimit">
+          <option value="-1">制限なし</option>
+          <option value="15">15秒</option>
+          <option value="30">30秒</option>
+          <option value="60">60秒</option>
+        </select>
         <button onclick="submitUserInputs()">OK</button>
         <button id = "cancel_reset" onclick="closeUserInput()">Cancel Reset</button>
     </div>
@@ -113,10 +120,13 @@
       }
       // プレイヤー名の入力を取得してゲームを開始する関数
       function submitUserInputs() {
+        console.log("submitUserInputs function called");
         currentPlayerIndex = 0;
         const blackPlayerInput = document.getElementById('blackPlayerInput').value;
         const whitePlayerInput = document.getElementById('whitePlayerInput').value;
         const observationsInput = document.getElementById('observationsInput').value;
+        const timeLimitSelect = document.getElementById('timeLimit');
+
         // 空欄チェック
         if (blackPlayerInput === "" || whitePlayerInput === "") {
             alert("プレイヤー名を入力してください。");
@@ -128,11 +138,23 @@
             alert("観測回数は1以上の整数を入力してください。");
             return;
         }
+
+        // 時間制限の設定
+        
+        timeLimit = parseInt(timeLimitSelect.value);
+        
+
         blackPlayer = blackPlayerInput;
         whitePlayer = whitePlayerInput;
         blackObservations = observationsInput;
         whiteObservations = observationsInput;
         //initialObservations = observationsInput; // 初期観測回数を設定
+
+        timeRemaining = timeLimit;
+        updateTimerDisplay();
+        if (timeLimit > 0) {
+          startTimer();
+        }
 
         updateObservationCount();
         closePopup();
@@ -149,5 +171,6 @@
       }
     </script>
       <p id="turnDisplay">ターン数: <span id="turnNumber">1</span></p>
+    <div id="timer"></div>
 </body>
 </html>

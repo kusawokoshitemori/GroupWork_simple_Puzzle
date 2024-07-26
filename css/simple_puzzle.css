@@ -111,7 +111,7 @@ button:disabled {
 }
 
 .popup button {
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 #infoButton {
@@ -141,4 +141,10 @@ button:disabled {
 body {
   padding-bottom: 50px; /* turnDisplayContainerの高さより少し大きめに */
 
+}
+#timer {
+  font-size: 18px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #007bff;
 }
