@@ -9,6 +9,7 @@ let whiteObservations = 3;
 //let initialObservations = 3; // プレイヤーが入力した観測回数を保持する変数
 let turnCount = 1;
 let playerActionCount = 0; // プレイヤーの行動回数をカウント
+let isObservationOnly = false;
 
 const boardElement = document.getElementById("board");
 const copy_boardElement = document.getElementById("copy_board");
@@ -73,9 +74,20 @@ let currentPlayerIndex = 0;
 
 //クリックしたときの処理
 function onCellClick(event) {
+  if (isObservationOnly) {
+    messageElement.textContent = "盤面が埋まっています。観測のみ可能です。";
+    return;
+  }
+
   //rowとcolが縦と横の変数
   const row = event.target.dataset.row;
   const col = event.target.dataset.col;
+
+  if (board[row][col] !== "") {
+    messageElement.textContent = `そのマスはすでに選択されています。現在の駒は${players[currentPlayerIndex]}です。`;
+    return;
+  }
+  //rowとcolが縦と横の変数
 
   //空なら今のプレイヤーの記号を置く
   if (board[row][col] === "") {
@@ -92,6 +104,11 @@ function onCellClick(event) {
     document.getElementById("switchBoard").disabled = true;
     // 次に置く駒を変更（観測の有無に関係しない
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
+  }
+  if (isBoardFull()) {
+    isObservationOnly = true;
+    messageElement.textContent = "盤面が埋まりました。観測のみ可能です。";
+    disableClicks(); // 盤面のクリックを無効化
   }
 }
 
@@ -115,6 +132,8 @@ function getPieceClass(value) {
 function resetGame() {
   document.getElementById("cancel_reset").disabled = false;
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
+  isObservationOnly = false;
+  enableClicks();
 }
 
 // 残りの観測回数を表示する関数 
@@ -216,6 +235,9 @@ function observation() {
     document.getElementById("observation").disabled = true;
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = false;
+    if(isObservationOnly){
+      messageElement.textContent = `${currentPlayer}さんの観測が完了しました。次は${waitingPlayer}さんの番です。`;
+      }
   }
   // ボタンの無効化設定
   // ゲームが終了した時は、最終盤面を切り替えて見れるようにする。
@@ -225,20 +247,34 @@ function observation() {
     document.getElementById("switchBoard").disabled = false;
     document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
   }
-incrementTurn();
+  incrementTurn();
 }
 // 観測なしでターンが変わる関数
 // 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
 function no_observation(){
-  // 現在のプレイヤーと待機プレイヤーを入れ替え
-  [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
-  messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
-  enableClicks();
-  // ボタンの無効化設定
-  document.getElementById("observation").disabled = true;
-  document.getElementById("no_observation").disabled = true;
-  document.getElementById("switchBoard").disabled = true;
+  if (!isObservationOnly) {
+    // 通常モードの場合の処理
+    [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
+    messageElement.textContent = `${currentPlayer}さんの番です。（持ち駒：${players[currentPlayerIndex]})`;
+    enableClicks();
+    // ボタンの無効化設定
+    document.getElementById("observation").disabled = true;
+    document.getElementById("no_observation").disabled = true;
+    document.getElementById("switchBoard").disabled = true;
 
+    
+  } else {
+    // 観測のみモードの場合の処理
+    messageElement.textContent = `${currentPlayer}さんは観測をスキップしました。次は${waitingPlayer}さんの番です。`;
+    [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
+    enableClicks();
+    // ボタンの無効化設定
+    document.getElementById("observation").disabled = false;
+    document.getElementById("no_observation").disabled = false;
+    document.getElementById("switchBoard").disabled = true;
+
+  }
+  
   incrementTurn(); // ターンのカウントを増やす
 }
 
@@ -355,4 +391,15 @@ document.addEventListener("DOMContentLoaded", () => {
 function showUserInputPopup() {
   document.getElementById('overlay').style.display = 'block';
   document.getElementById('userInputPopup').style.display = 'block';
+}
+
+function isBoardFull() {
+  for (let row = 0; row < boardSize; row++) {
+      for (let col = 0; col < boardSize; col++) {
+          if (board[row][col] === "") {
+              return false; // 空のマスがあればfalseを返す
+          }
+      }
+  }
+  return true; // 全てのマスが埋まっていればtrueを返す
 }
