@@ -255,9 +255,11 @@ function observation() {
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = false;
     document.getElementById("switchBoard").textContent = "確率・観測結果切り替え";
+    clearInterval(timerInterval);
+  } else {
+    switchTurntime();
+    incrementTurn();
   }
-  switchTurntime()
-  incrementTurn();
 }
 // 観測なしでターンが変わる関数
 // 「観測しない」ボタンが無ければ、両者がそれぞれ次の手を打つ可能性と観測する可能性が同時に存在して、ターン表示が難しい。
@@ -284,7 +286,7 @@ function no_observation(){
     document.getElementById("switchBoard").disabled = true;
 
   }
-  switchTurntime()
+  switchTurntime();
   incrementTurn();
 }
 
@@ -433,6 +435,7 @@ function updateTimerDisplay() {
       timerElement.textContent = `残り時間: ${timeRemaining}秒`;
   }
 }
+
 function switchTurntime() {
   // タイマーのリセットと再開
   timeRemaining = timeLimit;
