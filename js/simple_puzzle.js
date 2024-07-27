@@ -78,7 +78,7 @@ let currentPlayerIndex = 0;
 //クリックしたときの処理
 function onCellClick(event) {
   if (isObservationOnly) {
-    messageElement.textContent = "盤面が埋まっています。観測のみ可能です。";
+    messageElement.textContent = `盤面が埋まっています。観測のみ可能です。${currentPlayer}さんの番です。`;
     return;
   }
 
@@ -109,9 +109,9 @@ function onCellClick(event) {
     currentPlayerIndex = (currentPlayerIndex + 1) % players.length;
   }
   if (isBoardFull()) {
+    // 一個前のif文より、このとき必ずdisableClicks()されている状態。
     isObservationOnly = true;
     messageElement.textContent = "盤面が埋まりました。観測のみ可能です。";
-    disableClicks(); // 盤面のクリックを無効化
   }
 }
 
@@ -162,6 +162,9 @@ function observation() {
   } else if (currentPlayer === whitePlayer && whiteObservations > 0) {
     whiteObservations--; // 観測回数を1減らす
   } else {
+    // 遅ればせながら「観測する」ボタンを無効化する。
+    document.getElementById("observation").disabled = true;
+    messageElement.textContent = `${currentPlayer} さんは、既に観測の権利を使い切っています。`;
     return;
   }
   updateObservationCount(); // 残りの観測回数を表示するために呼び出し
@@ -245,7 +248,7 @@ function observation() {
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = false;
     if(isObservationOnly){
-      messageElement.textContent = `${currentPlayer}さんの観測が完了しました。次は${waitingPlayer}さんの番です。`;
+      messageElement.textContent = `${currentPlayer}さんの観測が完了しました。次は、${waitingPlayer}さんの番です。`;
       }
   }
   // ボタンの無効化設定
@@ -273,18 +276,15 @@ function no_observation(){
     document.getElementById("observation").disabled = true;
     document.getElementById("no_observation").disabled = true;
     document.getElementById("switchBoard").disabled = true;
-
-    
   } else {
     // 観測のみモードの場合の処理
-    messageElement.textContent = `${currentPlayer}さんは観測をスキップしました。次は${waitingPlayer}さんの番です。`;
+    messageElement.textContent = `${currentPlayer}さんは観測をスキップしました。次は、${waitingPlayer}さんの番です。`;
     [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
     enableClicks();
     // ボタンの無効化設定
     document.getElementById("observation").disabled = false;
     document.getElementById("no_observation").disabled = false;
     document.getElementById("switchBoard").disabled = true;
-
   }
   switchTurntime();
   incrementTurn();
@@ -384,11 +384,19 @@ function switchBoard(){
     copy_boardElement.style.display = "none";
     // ボタンの無効化設定
     // 観測するも5連続が無く、確率の盤面へ戻る場合。
-    if (!isEnd) {
+    if (!isEnd && !isObservationOnly) {
       [currentPlayer, waitingPlayer] = [waitingPlayer, currentPlayer];
       messageElement.textContent = `${currentPlayer} さんの番です。（持ち駒：${players[currentPlayerIndex]}）`;
       document.getElementById("observation").disabled = true;
       document.getElementById("no_observation").disabled = true;
+      document.getElementById("switchBoard").disabled = true;
+    } else if (!isEnd && isObservationOnly) {
+      // 観測のみモードの場合の処理
+      [currentPlayer, waitingPlayer] = [waitingPlayer,  currentPlayer];
+      enableClicks();
+      // ボタンの無効化設定
+      document.getElementById("observation").disabled = false;
+      document.getElementById("no_observation").disabled = false;
       document.getElementById("switchBoard").disabled = true;
     }
   }
