@@ -79,7 +79,8 @@ button {
 }
 
 button:disabled {
-  cursor: default;
+  /* cursor: default; */
+  opacity: 0.4;
 }
 
 /* ポップアップウィンドウと背景の暗転用CSS */
