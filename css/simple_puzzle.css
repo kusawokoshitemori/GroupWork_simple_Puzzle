@@ -166,7 +166,7 @@ body {
 }
 
 #observation {
-  background-image: radial-gradient( circle farthest-corner at 32.7% 82.7%,  rgba(173,0,171,1) 8.3%, rgba(15,51,92,1) 79.4% );
+  background-image: linear-gradient( 70.6deg,  rgba(172,30,255,1) 0.3%, rgba(65,35,251,1) 55.8%, rgba(35,251,224,1) 105.1% );
   color: white; /* 文字色 */
   padding: 12px 0px; /* パディング */
   text-align: center; /* 文字のアライメント */

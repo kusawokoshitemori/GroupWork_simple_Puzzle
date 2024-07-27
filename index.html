@@ -146,17 +146,14 @@
             return;
         }
 
-        // 時間制限の設定
-        
-        timeLimit = parseInt(timeLimitSelect.value);
-        
-
         blackPlayer = blackPlayerInput;
         whitePlayer = whitePlayerInput;
         blackObservations = observationsInput;
         whiteObservations = observationsInput;
-        //initialObservations = observationsInput; // 初期観測回数を設定
 
+        // 時間制限の設定
+        isObservationOnly = false;
+        timeLimit = parseInt(timeLimitSelect.value);
         timeRemaining = timeLimit;
         updateTimerDisplay();
         if (timeLimit > 0) {
@@ -174,7 +171,6 @@
         isEnd = false;
         turnCount = 1;
         playerActionCount = 0;
-        updateTurnDisplay();
       }
     </script>
 </body>

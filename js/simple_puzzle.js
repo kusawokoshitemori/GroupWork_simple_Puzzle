@@ -135,14 +135,6 @@ function getPieceClass(value) {
 function resetGame() {
   document.getElementById("cancel_reset").disabled = false;
   showUserInputPopup(); // リセット時にプレイヤー名と観測回数の入力ポップアップを表示
-  isObservationOnly = false;
-  enableClicks();
-  const timeLimitSelect = document.getElementById('timeLimit');
-  timeLimit = parseInt(timeLimitSelect.value);
-  clearInterval(timerInterval);
-  timeRemaining = timeLimit;
-  updateTimerDisplay();
-  // タイマーは submitUserInputs 関数で開始するため、ここでは開始しない
 }
 
 // 残りの観測回数を表示する関数 
