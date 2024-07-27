@@ -13,16 +13,23 @@
         <button id="infoButton" title="ルール説明" onclick="showRulesPopup()">i</button> <!-- title属性を追加 -->
     </div>
     <!--盤面を表示-->
+  <div id="game-container">
     <div id="board"></div>
     <div id="copy_board"></div>
-    <p id="message"></p>
-<button id="observation" onclick="observation()">観測する</button>
-<button id="no_observation" onclick="no_observation()">観測しない</button>
-<button id="switchBoard" onclick="switchBoard()">確率の盤面へ</button>
-<button onclick="resetGame()">Reset Game</button>
-    <!--残りの観測回数の表示-->
-    <p id="blackObservations">たろうさんの残り観測回数: 3</p>
-    <p id="whiteObservations">はなこさんの残り観測回数: 3</p>
+    <div id="right-container">
+      <button id="observation" onclick="observation()">観測する👀</button>
+      <button id="no_observation" onclick="no_observation()">観測しない🙈</button>
+      <button id="switchBoard" onclick="switchBoard()">確率の盤面へ</button>
+      <button id="resetGame" onclick="resetGame()">Reset Game</button>
+      <!--残りの観測回数の表示-->
+      <p id="blackObservations">たろうさんの残り観測回数: 3</p>
+      <p id="whiteObservations">はなこさんの残り観測回数: 3</p>
+      <p id="turnDisplay">ターン数: <span id="turnNumber">1</span></p>
+      <div id="timer"></div>
+    </div>
+  </div>
+  <!--messageは、頻繁に長さが変わるので盤面下へ。-->
+  <p id="message"></p>
 
     <!-- オーバーレイとポップアップ -->
     <div id="overlay" class="overlay"></div>
@@ -170,7 +177,5 @@
         updateTurnDisplay();
       }
     </script>
-      <p id="turnDisplay">ターン数: <span id="turnNumber">1</span></p>
-    <div id="timer"></div>
 </body>
 </html>

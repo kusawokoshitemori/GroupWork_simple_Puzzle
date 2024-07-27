@@ -14,15 +14,15 @@ body {
 #board {
   display: grid;
   gap: 5px;
-  justify-content: center;
-  margin: 20px auto;
+  /*justify-content: center;
+  margin: 20px auto;*/
 }
 
 #copy_board {
   display: grid;
   gap: 5px;
-  justify-content: center;
-  margin: 20px auto;
+  /*justify-content: center;
+  margin: 20px auto;*/
 }
 
 .cell {
@@ -128,23 +128,111 @@ button:disabled {
 }
 
 #turnDisplay {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   margin: 0;
 }
 
 #turnNumber {
+  font-size: 24px;
   color: #007bff; /* 数字の色を青に設定 */
 }
 
 /* メインコンテンツが固定表示のターン数に隠れないようにする */
+/*
 body {
-  padding-bottom: 50px; /* turnDisplayContainerの高さより少し大きめに */
-
+  padding-bottom: 50px; /* turnDisplayContainerの高さより少し大きめに *
 }
+*/
+
 #timer {
-  font-size: 18px;
+  font-size: 24px;
   font-weight: bold;
   margin: 10px 0;
   color: #007bff;
+}
+
+#game-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* ボタン類が包まれたコンテナ */
+#right-container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 20px; /* 盤面との間隔 */
+}
+
+#observation {
+  background-image: radial-gradient( circle farthest-corner at 32.7% 82.7%,  rgba(173,0,171,1) 8.3%, rgba(15,51,92,1) 79.4% );
+  color: white; /* 文字色 */
+  padding: 12px 0px; /* パディング */
+  text-align: center; /* 文字のアライメント */
+  text-decoration: none; /* 文字装飾 */
+  display: inline-block; /* ボタンの表示方法 */
+  font-size: 28px; /* フォントサイズ */
+  font-family: Arial, sans-serif; /* フォント */
+  margin: 4px 2px; /* 外側の余白 */
+  cursor: pointer; /* カーソル */
+  border: none; /* ボーダーなし */
+  border-radius: 50px; /* 50pxの角丸 */
+}
+
+#no_observation {
+  background-image: radial-gradient( circle farthest-corner at 5.6% 54.5%,  rgba(47,71,79,1) 0%, rgba(159,188,198,1) 83.6% );
+  color: white; /* 文字色 */
+  padding: 12px 0px; /* パディング */
+  text-align: center; /* 文字のアライメント */
+  text-decoration: none; /* 文字装飾 */
+  display: inline-block; /* ボタンの表示方法 */
+  font-size: 28px; /* フォントサイズ */
+  font-family: Arial, sans-serif; /* フォント */
+  margin: 4px 2px; /* 外側の余白 */
+  cursor: pointer; /* カーソル */
+  border: none; /* ボーダーなし */
+  border-radius: 50px; /* 50pxの角丸 */
+}
+
+#switchBoard {
+  background-image: radial-gradient( circle farthest-corner at 5.6% 54.5%,  rgba(47,71,79,1) 0%, rgba(159,188,198,1) 83.6% );
+  color: white; /* 文字色 */
+  padding: 12px 0px; /* パディング */
+  text-align: center; /* 文字のアライメント */
+  text-decoration: none; /* 文字装飾 */
+  display: inline-block; /* ボタンの表示方法 */
+  font-size: 28px; /* フォントサイズ */
+  font-family: Arial, sans-serif; /* フォント */
+  margin: 4px 2px; /* 外側の余白 */
+  cursor: pointer; /* カーソル */
+  border: none; /* ボーダーなし */
+  border-radius: 50px; /* 50pxの角丸 */
+}
+
+#resetGame {
+  background-image: radial-gradient( circle farthest-corner at 17.1% 22.8%,  rgba(226,24,24,1) 0%, rgba(160,6,6,1) 90% );
+  color: white; /* 文字色 */
+  padding: 12px 0px; /* パディング */
+  text-align: center; /* 文字のアライメント */
+  text-decoration: none; /* 文字装飾 */
+  display: inline-block; /* ボタンの表示方法 */
+  font-size: 28px; /* フォントサイズ */
+  font-family: Arial, sans-serif; /* フォント */
+  margin: 4px 2px; /* 外側の余白 */
+  cursor: pointer; /* カーソル */
+  border: none; /* ボーダーなし */
+  border-radius: 50px; /* 50pxの角丸 */
+}
+
+#blackObservations {
+  font-size: 24px;
+}
+
+#whiteObservations {
+  font-size: 24px;
+}
+
+#message {
+  font-size: 24px;
 }
