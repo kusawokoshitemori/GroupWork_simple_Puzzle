@@ -19,10 +19,10 @@ const copy_boardElement = document.getElementById("copy_board");
 const messageElement = document.getElementById("message");
 
 // boardsizeに対応したグリッドレイアウト
-boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
-copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 40px)`;
-copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 40px)`;
+boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 38px)`;
+boardElement.style.gridTemplateRows = `repeat(${boardSize}, 38px)`;
+copy_boardElement.style.gridTemplateColumns = `repeat(${boardSize}, 38px)`;
+copy_boardElement.style.gridTemplateRows = `repeat(${boardSize}, 38px)`;
 
 var isEnd = false; // ゲーム終了を表すフラグ（グローバル）
 

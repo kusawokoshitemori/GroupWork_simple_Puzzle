@@ -26,8 +26,8 @@ body {
 }
 
 .cell {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   background-color: rgba(194, 217, 138,1.0);
   border: 1px solid #ccc;
   display: flex;
@@ -42,8 +42,8 @@ body {
 }
 
 .cell1 {
-  width: 40px;
-  height: 40px;
+  width: 38px;
+  height: 38px;
   background-color: rgba(194, 217, 138,1.0);
   border: 1px solid #ccc;
   display: flex;
@@ -80,7 +80,7 @@ button {
 
 button:disabled {
   /* cursor: default; */
-  opacity: 0.4;
+  opacity: 0.3;
 }
 
 /* ポップアップウィンドウと背景の暗転用CSS */
@@ -122,10 +122,12 @@ button:disabled {
   background-color: #007BFF;
   color: white;
   border: none;
-  font-size: 20px;
+  font-size: 24px;
   line-height: 30px;
   text-align: center;
   cursor: pointer;
+  font-weight: bold;
+  font-family: Arial, sans-serif; /* フォント */
 }
 
 #turnDisplay {
@@ -157,6 +159,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding-bottom: 0px;
 }
 
 /* ボタン類が包まれたコンテナ */
@@ -173,7 +176,7 @@ body {
   text-align: center; /* 文字のアライメント */
   text-decoration: none; /* 文字装飾 */
   display: inline-block; /* ボタンの表示方法 */
-  font-size: 28px; /* フォントサイズ */
+  font-size: 24px; /* フォントサイズ */
   font-family: Arial, sans-serif; /* フォント */
   margin: 4px 2px; /* 外側の余白 */
   cursor: pointer; /* カーソル */
@@ -188,7 +191,7 @@ body {
   text-align: center; /* 文字のアライメント */
   text-decoration: none; /* 文字装飾 */
   display: inline-block; /* ボタンの表示方法 */
-  font-size: 28px; /* フォントサイズ */
+  font-size: 24px; /* フォントサイズ */
   font-family: Arial, sans-serif; /* フォント */
   margin: 4px 2px; /* 外側の余白 */
   cursor: pointer; /* カーソル */
@@ -203,7 +206,7 @@ body {
   text-align: center; /* 文字のアライメント */
   text-decoration: none; /* 文字装飾 */
   display: inline-block; /* ボタンの表示方法 */
-  font-size: 28px; /* フォントサイズ */
+  font-size: 24px; /* フォントサイズ */
   font-family: Arial, sans-serif; /* フォント */
   margin: 4px 2px; /* 外側の余白 */
   cursor: pointer; /* カーソル */
@@ -218,7 +221,7 @@ body {
   text-align: center; /* 文字のアライメント */
   text-decoration: none; /* 文字装飾 */
   display: inline-block; /* ボタンの表示方法 */
-  font-size: 28px; /* フォントサイズ */
+  font-size: 24px; /* フォントサイズ */
   font-family: Arial, sans-serif; /* フォント */
   margin: 4px 2px; /* 外側の余白 */
   cursor: pointer; /* カーソル */
@@ -236,4 +239,16 @@ body {
 
 #message {
   font-size: 24px;
+  padding-bottom: 20px; /* フッターから距離を取る */
+}
+
+.footerFrame {
+  text-align: center;
+  position: fixed;
+  padding: 4px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  color: #FFFFFF;
+  background: #333333;
 }
