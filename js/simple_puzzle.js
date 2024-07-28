@@ -416,7 +416,7 @@ function startTimer() {
       timeRemaining--;
       updateTimerDisplay();
 
-      if (timeRemaining <= 0) {
+      if (timeRemaining === 0) {
           clearInterval(timerInterval);
           messageElement.textContent = `時間切れで${waitingPlayer} さんの勝ち！`;
           disableClicks();
@@ -429,7 +429,7 @@ function startTimer() {
 
 function updateTimerDisplay() {
   const timerElement = document.getElementById('timer');
-  if (timeLimit === 0) {
+  if (timeLimit === -1) {
       timerElement.textContent = '制限なし';
   } else {
       timerElement.textContent = `残り時間: ${timeRemaining}秒`;
